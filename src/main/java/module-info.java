@@ -1,7 +1,7 @@
-module com.espol.mavenproject1 {
+module com.espol.Proyecto1_Estructuras {
     requires javafx.controls;
     requires javafx.fxml;
 
-    opens com.espol.mavenproject1 to javafx.fxml;
-    exports com.espol.mavenproject1;
+    opens com.espol.Proyecto1_Estructuras to javafx.fxml;
+    exports com.espol.Proyecto1_Estructuras;
 }

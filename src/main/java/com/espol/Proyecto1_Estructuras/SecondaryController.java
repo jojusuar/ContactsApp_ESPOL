@@ -1,4 +1,4 @@
-package com.espol.mavenproject1;
+package com.espol.Proyecto1_Estructuras;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
