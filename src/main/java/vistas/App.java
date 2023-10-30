@@ -1,4 +1,4 @@
-package com.espol.Proyecto1_Estructuras;
+package vistas;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
