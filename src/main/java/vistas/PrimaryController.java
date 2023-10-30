@@ -1,4 +1,4 @@
-package com.espol.Proyecto1_Estructuras;
+package vistas;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
