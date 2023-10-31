@@ -1,13 +1,14 @@
 
 package baseClasses;
 
+import java.io.Serializable;
 import tdas.CircularLinkedList;
 
 /**
  *
  * @author euclasio
  */
-public class Group {
+public class Group implements Serializable {
     private String name;
     private CircularLinkedList<Contact> contacts;
 
