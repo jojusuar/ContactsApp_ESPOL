@@ -1,6 +1,7 @@
 
 package tdas;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -9,8 +10,9 @@ import java.util.ListIterator;
 /**
  *
  * @author euclasio
+ * @param <E>
  */
-public class ArrayList<E> implements List<E> {
+public class ArrayList<E> implements List<E>, Serializable {
     private int effectiveSize;
     private E[] elements;
     private int capacity = 10;

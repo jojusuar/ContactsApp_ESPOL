@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package tdas;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -12,8 +10,9 @@ import java.util.ListIterator;
 /**
  *
  * @author euclasio
+ * @param <E>
  */
-public class CircularLinkedList<E> implements List<E> {
+public class CircularLinkedList<E> implements List<E>, Serializable {
     private DoubleLinkNode<E> reference;
     
     public CircularLinkedList(){
