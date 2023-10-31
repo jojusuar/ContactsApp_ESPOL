@@ -1,7 +1,9 @@
 
 package tdas;
 
-public class DoubleLinkNode<E> {
+import java.io.Serializable;
+
+public class DoubleLinkNode<E> implements Serializable{
     private E content;
     private DoubleLinkNode<E> previous;
     private DoubleLinkNode<E> next;
