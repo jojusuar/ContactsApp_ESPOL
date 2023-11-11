@@ -14,4 +14,15 @@ import tdas.CircularLinkedList;
  */
 public class UserData implements Serializable{
     private CircularLinkedList<Contact> contacts;
+    
+    public UserData(){
+        contacts = new CircularLinkedList<>();
+    }
+    
+    public void add(Contact c){
+        contacts.addLast(c);
+    };
+    public void delete(Contact c){
+        contacts.remove(c);
+    };
 }
