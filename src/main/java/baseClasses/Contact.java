@@ -91,39 +91,39 @@ public abstract class Contact implements Serializable {
     }
 
     public void addCommonGroup(Group g) {
-        commonGroups.add(g);
+        commonGroups.addLast(g);
     }
 
     public void addTrait(String t) {
-        traits.add(t);
+        traits.addLast(t);
     }
 
     public void addNumber(PhoneNumber n) {
-        phoneNumbers.add(n);
+        phoneNumbers.addLast(n);
     }
 
     public void addAddress(Address a) {
-        addresses.add(a);
+        addresses.addLast(a);
     }
 
     public void addEmail(Email e) {
-        emails.add(e);
+        emails.addLast(e);
     }
 
     public void addHandle(Handle h) {
-        handles.add(h);
+        handles.addLast(h);
     }
 
     public void addPhoto(Image i) {
-       photos.add(i);
+       photos.addLast(i);
     }
 
     public void addDate(IconicDate d) {
-        dates.add(d);
+        dates.addLast(d);
     }
 
     public void addRelatedContact(Contact c) {
-        relatedContacts.add(c);
+        relatedContacts.addLast(c);
     }
     
     

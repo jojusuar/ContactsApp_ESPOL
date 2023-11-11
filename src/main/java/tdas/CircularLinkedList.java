@@ -2,10 +2,8 @@
 package tdas;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  *
@@ -55,68 +53,55 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         };
         return itr;
     }
+    
+    public Iterator<E> reverse(){
+        Iterator<E> itr = new Iterator<>(){
+            DoubleLinkNode<E> cursor = reference;
+            @Override
+            public boolean hasNext(){
+                return cursor!=null;
+            }
+            public E next(){
+                E content = cursor.getContent();
+                cursor = cursor.getPrevious();
+                return content;
+            }
+        };
+        return itr;
+    }
 
     @Override
-    public Object[] toArray() {
+    public boolean addFirst(E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
+    public boolean addLast(E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean add(E e) {
-        if(e==null){
-            return false;
-        }
-        DoubleLinkNode<E> temp = new DoubleLinkNode<>(e);
-        if(reference==null){
-            reference = temp;
-            reference.setPrevious(reference);
-            reference.setNext(reference);
-            return true;
-        }
-        temp.setPrevious(reference.getPrevious());
-        temp.setNext(reference);
-        reference.getPrevious().setNext(temp);
-        reference.setPrevious(temp);
-        return true;
-    }
-
-    @Override
-    public boolean remove(Object o) {
+    public boolean removeFirst() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
+    public boolean removeLast() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> c) {
+    public E getFirst() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends E> c) {
+    public E getLast() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void clear() {
+    public boolean insert(int index, E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -126,12 +111,7 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     }
 
     @Override
-    public E set(int index, E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void add(int index, E element) {
+    public int indexOf(E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -141,28 +121,74 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     }
 
     @Override
-    public int indexOf(Object o) {
+    public boolean remove(E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int lastIndexOf(Object o) {
+    public E set(int index, E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public ListIterator<E> listIterator() {
+    public boolean addAll(List<E> l) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public ListIterator<E> listIterator(int index) {
+    public List<E> findIntersection(List<E> anotherList, Comparator<E> cmp) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public List<E> subList(int fromIndex, int toIndex) {
+    public boolean removeDuplicates(Comparator<E> comparator) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    @Override
+    public int binarySearch(E element, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean removeElement(E element, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int getIndexOf(E element, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Collection<Integer> getAllIndicesOf(E element, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean sort(Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean insertSorted(E element, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<E> mergeSorted(List<E> otherList, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<E> findUnion(List<E> otherList, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean containsAll(List<E> elements, Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     
 }
