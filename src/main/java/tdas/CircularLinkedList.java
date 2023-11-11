@@ -77,8 +77,23 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public boolean addLast(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(element==null){
+            return false;
+        }
+        DoubleLinkNode<E> temp = new DoubleLinkNode<>(element);
+        if(reference==null){
+            reference = temp;
+            reference.setPrevious(reference);
+            reference.setNext(reference);
+            return true;
+        }
+        temp.setPrevious(reference.getPrevious());
+        temp.setNext(reference);
+        reference.getPrevious().setNext(temp);
+        reference.setPrevious(temp);
+        return true;
     }
+    
 
     @Override
     public boolean removeFirst() {
