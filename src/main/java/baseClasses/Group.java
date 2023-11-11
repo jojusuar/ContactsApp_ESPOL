@@ -30,7 +30,7 @@ public class Group implements Serializable {
     }
 
     public void addContact(Contact c) {
-        contacts.add(c);
+        contacts.addLast(c);
     }
     
     @Override
