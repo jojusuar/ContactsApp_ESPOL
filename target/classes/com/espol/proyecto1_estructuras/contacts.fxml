@@ -17,12 +17,12 @@
               <Label />
          </children>
       </HBox>
-      <Button mnemonicParsing="false" text="Nuevo Contacto" />
+      <Button fx:id="newContactButton" mnemonicParsing="false" onAction="#newContact" text="Nuevo Contacto" />
       <VBox prefHeight="489.0" prefWidth="221.0">
          <children>
             <ScrollPane id="scroller" fx:id="scroller" prefHeight="487.0" prefWidth="221.0">
                <content>
-                  <VBox id="grid" fx:id="grid" prefHeight="486.0" prefWidth="205.0" />
+                  <VBox id="grid" fx:id="grid" prefHeight="486.0" prefWidth="390.0" />
                </content>
             </ScrollPane>
          </children>

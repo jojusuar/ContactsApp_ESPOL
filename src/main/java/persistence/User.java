@@ -13,13 +13,12 @@ import java.io.Serializable;
 public class User implements Serializable{
     private String username;
     private String password;
-    private UserData[] data;
+    private UserData data;
     
     public User(String username, String password){
         this.username = username;
         this.password = password;
-        this.data = new UserData[1];
-        data[0]= new UserData();
+        data= new UserData();
     }
 
     public String getUsername() {
@@ -36,6 +35,10 @@ public class User implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserData getData() {
+        return data;
     }
     
     public String toString(){
