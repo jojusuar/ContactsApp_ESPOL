@@ -30,6 +30,8 @@ public class LoginController implements Initializable {
     @FXML
     private Button signupButton;
     
+
+    
     @FXML
     private void login() throws IOException {
         Memory.load();
@@ -80,16 +82,16 @@ public class LoginController implements Initializable {
         TextField password = new TextField("Ingrese una contraseña");
         Button save = new Button("Guardar usuario");
         fields.getChildren().addAll(username, password, save);
-        Scene addMateriaScene = new Scene(fields, 450, 450);
-        Stage addMateriaStage = new Stage();
-        addMateriaStage.setScene(addMateriaScene);
-        addMateriaStage.show();
+        Scene signupScene = new Scene(fields, 450, 450);
+        Stage signupStage = new Stage();
+        signupStage.setScene(signupScene);
+        signupStage.show();
         save.setOnAction(ev -> {
             Memory.load();
             User user = new User(username.getText(), password.getText());
             Memory.addUser(user);
             Memory.save();
-            addMateriaStage.close();
+            signupStage.close();
         });
     }
     

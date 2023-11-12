@@ -1,4 +1,3 @@
-
 package tdas;
 
 import java.io.Serializable;
@@ -11,16 +10,17 @@ import java.util.Iterator;
  * @param <E>
  */
 public class CircularLinkedList<E> implements List<E>, Serializable {
+
     private DoubleLinkNode<E> reference;
-    
-    public CircularLinkedList(){
+
+    public CircularLinkedList() {
         reference = null;
     }
-    
-    public void setReference(DoubleLinkNode<E> e){
+
+    public void setReference(DoubleLinkNode<E> e) {
         reference = e;
     }
-    
+
     @Override
     public int size() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -28,7 +28,7 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public boolean isEmpty() {
-        return reference==null;
+        return reference == null;
     }
 
     @Override
@@ -38,30 +38,53 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public Iterator<E> iterator() {
-        Iterator<E> itr = new Iterator<>(){
-            DoubleLinkNode<E> cursor = reference;
+        Iterator<E> itr = new Iterator<>() {
+            private DoubleLinkNode<E> current = reference;
+            private boolean first = true;
+
             @Override
-            public boolean hasNext(){
-                return cursor==null;
+            public boolean hasNext() {
+                // Check if it's the first iteration or if the current node is not the reference node
+                return first || !current.equals(reference);
             }
+
             @Override
-            public E next(){
-                E temp = cursor.getContent();
-                cursor = cursor.getNext();
-                return temp;
+            public E next() {
+                if (first) {
+                    first = false;
+                } else {
+                    current = current.getNext();
+                }
+                return current.getContent();
             }
         };
         return itr;
     }
-    
-    public Iterator<E> reverse(){
-        Iterator<E> itr = new Iterator<>(){
+
+    public void display() {
+        if (reference == null) {
+            System.out.println("List is empty");
+            return;
+        }
+
+        DoubleLinkNode<E> current = reference;
+        do {
+            System.out.print(current.getContent() + " ");
+            current = current.getNext();
+        } while (current != reference);
+        System.out.println();
+    }
+
+    public Iterator<E> reverse() {
+        Iterator<E> itr = new Iterator<>() {
             DoubleLinkNode<E> cursor = reference;
+
             @Override
-            public boolean hasNext(){
-                return cursor!=null;
+            public boolean hasNext() {
+                return cursor != null;
             }
-            public E next(){
+
+            public E next() {
                 E content = cursor.getContent();
                 cursor = cursor.getPrevious();
                 return content;
@@ -77,23 +100,20 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public boolean addLast(E element) {
-        if(element==null){
-            return false;
-        }
-        DoubleLinkNode<E> temp = new DoubleLinkNode<>(element);
-        if(reference==null){
-            reference = temp;
-            reference.setPrevious(reference);
+        DoubleLinkNode<E> newNode = new DoubleLinkNode<>(element);
+        if (reference == null) {
+            reference = newNode;
             reference.setNext(reference);
-            return true;
+            reference.setPrevious(reference);
+        } else {
+            DoubleLinkNode<E> lastNode = reference.getPrevious();
+            lastNode.setNext(newNode);
+            newNode.setPrevious(lastNode);
+            newNode.setNext(reference);
+            reference.setPrevious(newNode);
         }
-        temp.setPrevious(reference.getPrevious());
-        temp.setNext(reference);
-        reference.getPrevious().setNext(temp);
-        reference.setPrevious(temp);
         return true;
     }
-    
 
     @Override
     public boolean removeFirst() {
@@ -205,5 +225,4 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
 }

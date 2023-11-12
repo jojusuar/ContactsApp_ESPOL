@@ -1,6 +1,9 @@
 
 package baseClasses;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import javafx.scene.image.Image;
 import tdas.ArrayList;
@@ -20,13 +23,14 @@ public abstract class Contact implements Serializable {
     protected ArrayList<Address> addresses;
     protected ArrayList<Email> emails;
     protected ArrayList<Handle> handles;
-    protected CircularLinkedList<Image> photos;
+    protected String pfp;
+    protected CircularLinkedList<String> photos;
     protected ArrayList<IconicDate> dates;
     protected CircularLinkedList<Contact> relatedContacts;
 
-    public Contact(String context, boolean isFavorite) {
+    public Contact(String context) {
         this.context = context;
-        this.isFavorite = isFavorite;
+        this.isFavorite = false;
         this.commonGroups = new ArrayList<>();
         this.traits = new ArrayList<>();
         this.phoneNumbers = new ArrayList<>();
@@ -34,6 +38,7 @@ public abstract class Contact implements Serializable {
         this.emails = new ArrayList<>();
         this.handles = new ArrayList<>();
         this.photos = new CircularLinkedList<>();
+        this.pfp = "src/main/resources/assets/pfp.png";
         this.dates = new ArrayList<>();
         this.relatedContacts = new CircularLinkedList<>();
     }
@@ -70,7 +75,7 @@ public abstract class Contact implements Serializable {
         return handles;
     }
 
-    public CircularLinkedList<Image> getPhotos() {
+    public CircularLinkedList<String> getPhotos() {
         return photos;
     }
 
@@ -114,7 +119,7 @@ public abstract class Contact implements Serializable {
         handles.addLast(h);
     }
 
-    public void addPhoto(Image i) {
+    public void addPhoto(String i) {
        photos.addLast(i);
     }
 
@@ -125,12 +130,16 @@ public abstract class Contact implements Serializable {
     public void addRelatedContact(Contact c) {
         relatedContacts.addLast(c);
     }
-    
-    
-    
-    
+
+    public String getPfp() {
+        return pfp;
+    }
+
+    public void setPfp(String pfp) {
+        this.pfp = pfp;
+    }
     
     @Override
     public abstract String toString();
-    
+
 }

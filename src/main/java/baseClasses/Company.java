@@ -8,8 +8,8 @@ package baseClasses;
 public class Company extends Contact {
     private String name;
 
-    public Company(String context, boolean isFavorite, String name) {
-        super(context, isFavorite);
+    public Company(String context, String name) {
+        super(context);
         this.name = name;
     }
     
