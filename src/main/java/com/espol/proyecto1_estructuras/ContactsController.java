@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import persistence.User;
 
 /**
  * FXML Controller class
@@ -16,6 +17,7 @@ import javafx.fxml.Initializable;
  * @author euclasio
  */
 public class ContactsController implements Initializable {
+    private static User currentUser = null;
     
     @FXML
     private void switchToLogin() throws IOException {
@@ -28,6 +30,10 @@ public class ContactsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    } 
+    
+    public static void setCurrentUser(User currentUser) {
+        ContactsController.currentUser = currentUser;
+    }
     
 }

@@ -17,6 +17,18 @@ import tdas.ArrayList;
  */
 public class Memory {
     private static ArrayList<User> users = new ArrayList<>();
+
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
+    
+    public static void addUser(User user){
+        users.addLast(user);
+    }
+    
+    public static void deleteUser(User user){
+        users.remove(user);
+    }
     
     public static void save(){
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("src/main/resources/memory/users.ser"));) {
@@ -29,6 +41,7 @@ public class Memory {
     public static void load(){
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/main/resources/memory/users.ser"));) {
             users = (ArrayList<User>) in.readObject();
+            System.out.println(users);
         } catch (IOException ex) {
             System.out.println("Error al cargar los usuarios");
             users = new ArrayList<>();
