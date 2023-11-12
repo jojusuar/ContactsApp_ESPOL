@@ -1,14 +1,12 @@
-package vistas;
+package com.espol.proyecto1_estructuras;
 
-import baseClasses.Email;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import tdas.*;
+
 import java.io.IOException;
-import java.util.Comparator;
 
 /**
  * JavaFX App
@@ -19,7 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("login"), 405, 900);
+        scene = new Scene(loadFXML("login"), 450, 900);
         stage.setScene(scene);
         stage.show();
     }
@@ -35,8 +33,6 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
-        Comparator<Email> comp = (Email e1, Email e2) -> {
-            return e1.getEmailAddress().length()-e2.getEmailAddress().length();
-        };
     }
+
 }

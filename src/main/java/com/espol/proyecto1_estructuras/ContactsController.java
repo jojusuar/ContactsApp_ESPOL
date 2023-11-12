@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package vistas;
+package com.espol.proyecto1_estructuras;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,10 +15,15 @@ import javafx.fxml.Initializable;
  *
  * @author euclasio
  */
-public class SearchController implements Initializable {
+public class ContactsController implements Initializable {
+    
     @FXML
-    private void switchToContacts() throws IOException {
-        App.setRoot("contacts");
+    private void switchToLogin() throws IOException {
+        App.setRoot("login");
+    }
+    @FXML
+    private void switchToSearch() throws IOException {
+        App.setRoot("search");
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -1,8 +1,6 @@
 tdas/CircularLinkedList$1.class
 tdas/CircularLinkedList.class
 baseClasses/Handle.class
-vistas/App.class
-vistas/SearchController.class
 tdas/ArrayList$1.class
 baseClasses/Email.class
 baseClasses/Company.class
@@ -12,14 +10,16 @@ module-info.class
 persistence/User.class
 persistence/UserData.class
 tdas/CircularLinkedList$2.class
-vistas/LoginController.class
 tdas/DoubleLinkNode.class
 tdas/Collection.class
 persistence/Memory.class
+com/espol/proyecto1_estructuras/LoginController.class
 tdas/List.class
 tdas/ArrayList.class
 baseClasses/Group.class
 baseClasses/Address.class
+com/espol/proyecto1_estructuras/App.class
 baseClasses/Person.class
+com/espol/proyecto1_estructuras/ContactsController.class
 baseClasses/IconicDate.class
-vistas/ContactsController.class
+com/espol/proyecto1_estructuras/SearchController.class
