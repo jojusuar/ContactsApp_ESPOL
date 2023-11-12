@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import persistence.User;
 
 /**
@@ -20,6 +22,12 @@ public class ContactsController implements Initializable {
     private static User currentUser = null;
     
     @FXML
+    private ScrollPane scroller;
+    
+    @FXML
+    private VBox grid;
+    
+    @FXML
     private void switchToLogin() throws IOException {
         App.setRoot("login");
     }
@@ -29,7 +37,7 @@ public class ContactsController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        System.out.println("Usuario actual: "+ currentUser);
     } 
     
     public static void setCurrentUser(User currentUser) {
