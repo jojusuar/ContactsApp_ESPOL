@@ -4,11 +4,13 @@
  */
 package persistence;
 
+import java.io.Serializable;
+
 /**
  *
  * @author euclasio
  */
-public class User {
+public class User implements Serializable{
     private String username;
     private String password;
     private UserData[] data;
@@ -36,5 +38,7 @@ public class User {
         this.password = password;
     }
     
-    
+    public String toString(){
+        return username;
+    } 
 }
