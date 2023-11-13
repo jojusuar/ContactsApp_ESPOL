@@ -39,6 +39,7 @@ import tdas.DoubleLinkNode;
 public class ContactsController implements Initializable {
 
     private static User currentUser = null;
+    private static CircularLinkedList<Contact> contacts = null;
     private static DoubleLinkNode<Contact> cursor = null;
 
     @FXML
@@ -66,22 +67,17 @@ public class ContactsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Cargando el usuario recibido: "+currentUser.toString());
-        cursor = currentUser.getData().getContacts().getReference();
+        contacts = currentUser.getData().getContacts();
+        cursor = contacts.getReference();
         showContacts();
-//        grid.setOnScroll((ScrollEvent event) -> {
-//            System.out.println("cursor antes de evento: "+cursor.toString());
-//            double deltaY = event.getDeltaY();
-//            if (deltaY > 0) {
-//                System.out.println("activado");
-//                cursor = cursor.getNext();
-//                showContacts();
-//            } else if (deltaY < 0) {
-//                System.out.println("activado");
-//                cursor = cursor.getPrevious();
-//                showContacts();
-//            }
-//        });
+        grid.setOnScroll((ScrollEvent event) -> {
+            double deltaY = event.getDeltaY();
+            if (deltaY > 0) {
+                moveUp();
+            } else if (deltaY < 0) {
+                moveDown();
+            }
+        });
     }
 
     @FXML
@@ -141,12 +137,12 @@ public class ContactsController implements Initializable {
 
     private void saveContact(Contact c) {
         boolean empty = false;
-        if(currentUser.getData().getContacts().isEmpty()){
+        if (contacts.isEmpty()) {
             empty = true;
         }
         currentUser.getData().add(c);
-        if(empty){
-            cursor = currentUser.getData().getContacts().getReference();
+        if (empty) {
+            cursor = contacts.getReference();
         }
         Memory.save();
         System.out.println(currentUser.getData().getContacts());
@@ -157,25 +153,10 @@ public class ContactsController implements Initializable {
         ContactsController.currentUser = currentUser;
     }
 
-    private void loadContacts() {
-        Memory.load();
-        grid.getChildren().clear();
-        try {
-            for (User user : Memory.getUsers()) {
-                if (user.getUsername().equals(currentUser.getUsername())) {
-                    setCurrentUser(user);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void showContacts() {
-        System.out.println("cursor actual: "+cursor);
         grid.getChildren().clear();
-        if (currentUser.getData().getContacts().size() <= 10) {
-            for (int i = 0; i < currentUser.getData().getContacts().size(); i++) {
+        if (contacts.size() <= 10) {
+            for (int i = 0; i < contacts.size(); i++) {
                 HBox card = new HBox(20);
                 Label name = new Label(cursor.getContent().toString());
                 ImageView pfp = loadPfp(cursor.getContent().getPfp());
@@ -192,17 +173,27 @@ public class ContactsController implements Initializable {
                 grid.getChildren().add(card);
                 cursor = cursor.getNext();
             }
+            for (int i = 0; i < contacts.size() - 10; i++) {
+                cursor = cursor.getNext();
+            }
         }
     }
+
     @FXML
-    private void moveUp(){
-        cursor = cursor.getPrevious();
-        showContacts();
+    private void moveUp() {
+        if (cursor != null) {
+            cursor = cursor.getPrevious();
+            showContacts();
+        }
+
     }
+
     @FXML
-    private void moveDown(){
-        cursor = cursor.getNext();
-        showContacts();
+    private void moveDown() {
+        if (cursor != null) {
+            cursor = cursor.getNext();
+            showContacts();
+        }
     }
 
     private ImageView loadPfp(String path) {
