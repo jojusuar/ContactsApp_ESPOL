@@ -21,9 +21,23 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         reference = e;
     }
 
+    public DoubleLinkNode<E> getReference() {
+        return reference;
+    }
+
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(isEmpty()){
+            return 0;
+        }
+        DoubleLinkNode current = reference;
+        int size = 0;
+        do{
+            current = current.getNext();
+            size++;
+        }
+        while(!current.equals(reference));
+        return size;
     }
 
     @Override
