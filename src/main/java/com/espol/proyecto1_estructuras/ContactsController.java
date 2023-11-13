@@ -140,9 +140,15 @@ public class ContactsController implements Initializable {
     }
 
     private void saveContact(Contact c) {
+        boolean empty = false;
+        if(currentUser.getData().getContacts().isEmpty()){
+            empty = true;
+        }
         currentUser.getData().add(c);
+        if(empty){
+            cursor = currentUser.getData().getContacts().getReference();
+        }
         Memory.save();
-        grid.getChildren().clear();
         System.out.println(currentUser.getData().getContacts());
         showContacts();
     }
