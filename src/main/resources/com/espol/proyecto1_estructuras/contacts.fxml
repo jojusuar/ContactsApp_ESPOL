@@ -17,7 +17,9 @@
          </children>
       </HBox>
       <Button fx:id="newContactButton" mnemonicParsing="false" onAction="#newContact" text="Nuevo Contacto" />
+      <Button id="upButton" fx:id="upButton" mnemonicParsing="false" onAction="#moveUp" text="Subir" />
       <VBox id="grid" fx:id="grid" prefHeight="486.0" prefWidth="390.0" />
+      <Button id="downButton" fx:id="downButton" mnemonicParsing="false" onAction="#moveDown" text="Bajar" />
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <TextField prefHeight="24.0" prefWidth="206.0" />
