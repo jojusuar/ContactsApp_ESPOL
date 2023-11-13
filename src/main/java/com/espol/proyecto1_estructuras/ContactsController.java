@@ -22,11 +22,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import persistence.Memory;
 import persistence.User;
+import tdas.CircularLinkedList;
+import tdas.DoubleLinkNode;
 
 /**
  * FXML Controller class
@@ -36,6 +39,8 @@ import persistence.User;
 public class ContactsController implements Initializable {
 
     private static User currentUser = null;
+    private CircularLinkedList<Contact> contacts;
+    private static DoubleLinkNode<Contact> cursor = null;
 
     @FXML
     private ScrollPane scroller;
@@ -59,6 +64,21 @@ public class ContactsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadContacts();
+        cursor = contacts.getReference();
+        showContacts();
+        grid.setOnScroll((ScrollEvent event) -> {
+            double deltaY = event.getDeltaY();
+            if (deltaY > 0) {
+                cursor = cursor.getNext();
+                loadContacts();
+                showContacts();
+            } else if (deltaY < 0) {
+                cursor = cursor.getPrevious();
+                loadContacts();
+                showContacts();
+            }
+
+        });
     }
 
     @FXML
@@ -125,6 +145,8 @@ public class ContactsController implements Initializable {
         Memory.save();
         grid.getChildren().clear();
         loadContacts();
+        cursor = contacts.getReference();
+        showContacts();
     }
 
     public static void setCurrentUser(User currentUser) {
@@ -133,24 +155,41 @@ public class ContactsController implements Initializable {
 
     private void loadContacts() {
         Memory.load();
+        grid.getChildren().clear();
         try {
             for (User user : Memory.getUsers()) {
                 if (user.getUsername().equals(currentUser.getUsername())) {
                     currentUser = user;
+                    contacts = currentUser.getData().getContacts();
                 }
             }
-            for (Contact contact : currentUser.getData().getContacts()) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showContacts() {
+        System.out.println("cursor actual: "+cursor.getContent());
+        if (contacts.size() <= 10) {
+            for (int i = 0; i < contacts.size(); i++) {
                 HBox card = new HBox(20);
-                Label name = new Label(contact.toString());
-                ImageView pfp = loadPfp(contact.getPfp());
+                Label name = new Label(cursor.getContent().toString());
+                ImageView pfp = loadPfp(cursor.getContent().getPfp());
                 card.getChildren().addAll(pfp, name);
                 grid.getChildren().add(card);
-            } 
+                cursor = cursor.getNext();
+            }
+        } else {
+            for (int i = 0; i < 10; i++) {
+                HBox card = new HBox(20);
+                Label name = new Label(cursor.getContent().toString());
+                ImageView pfp = loadPfp(cursor.getContent().getPfp());
+                card.getChildren().addAll(pfp, name);
+                grid.getChildren().add(card);
+                cursor = cursor.getNext();
+            }
         }
-        catch(NullPointerException e){
-            System.out.println("No hay contactos");
-        }
-
     }
 
     private ImageView loadPfp(String path) {

@@ -4,6 +4,7 @@
  */
 package tdas;
 
+import baseClasses.Contact;
 import java.util.Comparator;
 
 /**
