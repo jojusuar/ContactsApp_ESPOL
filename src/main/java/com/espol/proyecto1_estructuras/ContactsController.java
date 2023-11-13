@@ -70,14 +70,11 @@ public class ContactsController implements Initializable {
             double deltaY = event.getDeltaY();
             if (deltaY > 0) {
                 cursor = cursor.getNext();
-                loadContacts();
                 showContacts();
             } else if (deltaY < 0) {
                 cursor = cursor.getPrevious();
-                loadContacts();
                 showContacts();
             }
-
         });
     }
 
@@ -115,7 +112,8 @@ public class ContactsController implements Initializable {
         Button save = new Button("Crear contacto");
         input.getChildren().addAll(firstName, middleName, lastName, context, save);
         save.setOnAction(ev -> {
-            Contact contact = new Person(context.getText(), firstName.getText(), middleName.getText(), lastName.getText());
+            Contact contact = new Person(context.getText(), firstName.getText(), middleName.getText(),
+                    lastName.getText());
             saveContact(contact);
             contactStage.close();
         });
@@ -163,14 +161,12 @@ public class ContactsController implements Initializable {
                     contacts = currentUser.getData().getContacts();
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void showContacts() {
-        System.out.println("cursor actual: "+cursor);
         if (contacts.size() <= 10) {
             for (int i = 0; i < contacts.size(); i++) {
                 HBox card = new HBox(20);
