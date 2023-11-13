@@ -170,7 +170,7 @@ public class ContactsController implements Initializable {
     }
 
     private void showContacts() {
-        System.out.println("cursor actual: "+cursor.getContent());
+        System.out.println("cursor actual: "+cursor);
         if (contacts.size() <= 10) {
             for (int i = 0; i < contacts.size(); i++) {
                 HBox card = new HBox(20);
