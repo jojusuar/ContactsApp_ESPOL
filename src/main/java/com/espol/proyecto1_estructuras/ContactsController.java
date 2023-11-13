@@ -137,12 +137,21 @@ public class ContactsController implements Initializable {
 
     private void saveContact(Contact c) {
         boolean empty = false;
+<<<<<<< HEAD
         if (contacts.isEmpty()) {
             empty = true;
         }
         currentUser.getData().add(c);
         if (empty) {
             cursor = contacts.getReference();
+=======
+        if(currentUser.getData().getContacts().isEmpty()){
+            empty = true;
+        }
+        currentUser.getData().add(c);
+        if(empty){
+            cursor = currentUser.getData().getContacts().getReference();
+>>>>>>> main
         }
         Memory.save();
         System.out.println(currentUser.getData().getContacts());
