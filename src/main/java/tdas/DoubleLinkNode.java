@@ -44,4 +44,11 @@ public class DoubleLinkNode<E> implements Serializable{
         this.next = next;
     }
     
+    @Override
+    public String toString(){
+        if (this==null){
+            return "null cursor";
+        }
+        return content.toString();
+    }
 }

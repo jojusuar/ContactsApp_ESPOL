@@ -106,6 +106,22 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         };
         return itr;
     }
+    @Override
+    public String toString() {
+        if(reference!=null){
+            String string = "";
+        DoubleLinkNode<E> cursor = reference;
+        do{
+            string+=cursor.toString();
+            cursor = cursor.getNext();
+        }
+        while(cursor!=reference);
+        return string;
+        }
+        else{
+            return "";
+        }
+    }
 
     @Override
     public boolean addFirst(E element) {
