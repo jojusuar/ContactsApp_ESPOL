@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="261.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.espol.proyecto1_estructuras.ContactCardController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="97.0" prefWidth="261.0" spacing="20.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#switchToContacts" onMouseClicked="#switchToContacts" text="Volver" />
+            <Button mnemonicParsing="false" text="Editar" />
+            <Button mnemonicParsing="false" text="Eliminar" />
+         </children>
+      </HBox>
+      <ScrollPane prefHeight="592.0" prefWidth="261.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="592.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
+   </children>
+</VBox>

@@ -58,7 +58,6 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
             @Override
             public boolean hasNext() {
-                // Check if it's the first iteration or if the current node is not the reference node
                 return first || !current.equals(reference);
             }
 
