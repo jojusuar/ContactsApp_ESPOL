@@ -28,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import persistence.Memory;
 import persistence.User;
+import tdas.ArrayList;
 import tdas.CircularLinkedList;
 import tdas.DoubleLinkNode;
 
@@ -60,8 +61,14 @@ public class ContactsController implements Initializable {
     private void switchToSearch() throws IOException {
         App.setRoot("search");
     }
+
+    private void switchToContactCard() throws IOException {
+        App.setRoot("contactCard");
+    }
+
     @FXML
     private Button upButton;
+
     @FXML
     private Button downButton;
 
@@ -111,10 +118,18 @@ public class ContactsController implements Initializable {
         TextField middleName = new TextField("Segundo nombre");
         TextField lastName = new TextField("Apellido");
         TextField context = new TextField("Descripción");
+        Button loadPfp = new Button("Cargar foto de contacto");
+        Label pfpInfo = new Label("foto de perfil no seleccionada");
+        ArrayList<String> pfpPath = new ArrayList<>();
+        pfpPath.addLast("src/main/resources/assets/pfp.png");
         Button save = new Button("Crear contacto");
-        input.getChildren().addAll(firstName, middleName, lastName, context, save);
+        input.getChildren().addAll(firstName, middleName, lastName, context, loadPfp, pfpInfo, save);
+        loadPfp.setOnAction(ev -> {
+            pfpPath.set(0, vistasUtilitary.chooseFile(contactStage));
+            pfpInfo.setText("foto de contacto: " + pfpPath.get(0).substring(25));
+        });
         save.setOnAction(ev -> {
-            Contact contact = new Person(context.getText(), firstName.getText(), middleName.getText(),
+            Contact contact = new Person(context.getText(), pfpPath.get(0), firstName.getText(), middleName.getText(),
                     lastName.getText());
             saveContact(contact);
             contactStage.close();
@@ -126,10 +141,18 @@ public class ContactsController implements Initializable {
         input.getChildren().clear();
         TextField name = new TextField("Empresa");
         TextField context = new TextField("Descripción");
+        Button loadPfp = new Button("Cargar foto de contacto");
+        Label pfpInfo = new Label("foto de perfil no seleccionada");
+        ArrayList<String> pfpPath = new ArrayList<>();
+        pfpPath.addLast("src/main/resources/assets/pfp.png");
         Button save = new Button("Crear contacto");
-        input.getChildren().addAll(name, context, save);
+        input.getChildren().addAll(name, context, loadPfp, pfpInfo, save);
+        loadPfp.setOnAction(ev -> {
+            pfpPath.set(0, vistasUtilitary.chooseFile(contactStage));
+            pfpInfo.setText("foto de contacto: " + pfpPath.get(0).substring(25));
+        });
         save.setOnAction(ev -> {
-            Contact contact = new Company(context.getText(), name.getText());
+            Contact contact = new Company(context.getText(), pfpPath.get(0), name.getText());
             saveContact(contact);
             contactStage.close();
         });
@@ -155,27 +178,34 @@ public class ContactsController implements Initializable {
 
     private void showContacts() {
         grid.getChildren().clear();
-        if (contacts.size() <= 10) {
-            for (int i = 0; i < contacts.size(); i++) {
-                HBox card = new HBox(20);
-                Label name = new Label(cursor.getContent().toString());
-                ImageView pfp = loadPfp(cursor.getContent().getPfp());
-                card.getChildren().addAll(pfp, name);
-                grid.getChildren().add(card);
-                cursor = cursor.getNext();
-            }
+        int contactsSize = contacts.size();
+        if (contactsSize <= 10) {
+            createContactSlots(contactsSize);
         } else {
-            for (int i = 0; i < 10; i++) {
-                HBox card = new HBox(20);
-                Label name = new Label(cursor.getContent().toString());
-                ImageView pfp = loadPfp(cursor.getContent().getPfp());
-                card.getChildren().addAll(pfp, name);
-                grid.getChildren().add(card);
-                cursor = cursor.getNext();
-            }
+            createContactSlots(10);
             for (int i = 0; i < contacts.size() - 10; i++) {
                 cursor = cursor.getNext();
             }
+        }
+    }
+
+    private void createContactSlots(int k) {
+        for (int i = 0; i < k; i++) {
+            Contact contact = cursor.getContent();
+            HBox card = new HBox(20);
+            Label name = new Label(contact.toString());
+            ImageView pfp = loadPfp(contact.getPfp());
+            card.getChildren().addAll(pfp, name);
+            card.setOnMouseClicked(ev -> {
+                ContactCardController.setCurrentContact(contact);
+                try {
+                    switchToContactCard();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            grid.getChildren().add(card);
+            cursor = cursor.getNext();
         }
     }
 

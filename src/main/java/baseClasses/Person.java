@@ -10,8 +10,9 @@ public class Person extends Contact {
     private String middleName;
     private String lastName;
 
-    public Person( String context, String firstName, String middleName, String lastName) {
+    public Person( String context, String pfp, String firstName, String middleName, String lastName) {
         super(context);
+        this.pfp = pfp;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
