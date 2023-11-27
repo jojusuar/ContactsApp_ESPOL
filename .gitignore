@@ -1,2 +1,3 @@
 /target
-src/main/resources/cache
+src/main/resources/cache/*
+!src/main/resources/cache/.gitkeep
