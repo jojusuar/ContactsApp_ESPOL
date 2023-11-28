@@ -56,10 +56,10 @@ public class vistasUtilitary {
         Double imageH = imageview.getBoundsInLocal().getHeight();
         if (imageW > imageH) {
             imageview.setFitHeight(radius * 2);
-            imageview.setViewport(new javafx.geometry.Rectangle2D(imageW/4, 0, imageH, imageH));
-        } else if (imageH > imageW) {
+            imageview.setViewport(new javafx.geometry.Rectangle2D((imageW - imageH) / 2, 0, imageH, imageH));
+        } else {
             imageview.setFitWidth(radius * 2);
-            imageview.setViewport(new javafx.geometry.Rectangle2D(0, imageH/4, imageW, imageW));
+            imageview.setViewport(new javafx.geometry.Rectangle2D(0, (imageH - imageW) / 2, imageW, imageW));
         }
         imageview.setSmooth(true);
         Ellipse ellipse = new Ellipse();
