@@ -171,7 +171,17 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public E get(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return getNode(index).getContent();
+    }
+    
+    public DoubleLinkNode<E> getNode(int index) {
+        DoubleLinkNode<E> current = reference;
+        int counter = 0;
+        while(counter<index){
+            current = current.getNext();
+            counter++;
+        }
+        return current;
     }
 
     @Override
@@ -191,7 +201,10 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public E set(int index, E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DoubleLinkNode<E> node = getNode(index);
+        E gone = node.getContent();
+        node.setContent(element);
+        return gone;
     }
 
     @Override

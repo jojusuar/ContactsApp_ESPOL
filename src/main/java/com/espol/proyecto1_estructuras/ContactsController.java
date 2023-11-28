@@ -7,7 +7,6 @@ package com.espol.proyecto1_estructuras;
 import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Person;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +19,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
@@ -28,7 +26,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import persistence.Memory;
 import persistence.User;
-import tdas.ArrayList;
 import tdas.CircularLinkedList;
 import tdas.DoubleLinkNode;
 
@@ -120,17 +117,24 @@ public class ContactsController implements Initializable {
         TextField context = new TextField("Descripción");
         Button loadPfp = new Button("Cargar foto de contacto");
         Label pfpInfo = new Label("foto de perfil no seleccionada");
-        ArrayList<String> pfpPath = new ArrayList<>();
-        pfpPath.addLast("src/main/resources/assets/pfp.png");
+        Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
+        Label photosInfo = new Label("imágenes de la galería:");
+        CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
+        imgPaths.addLast("src/main/resources/assets/pfp.png");
         Button save = new Button("Crear contacto");
-        input.getChildren().addAll(firstName, middleName, lastName, context, loadPfp, pfpInfo, save);
+        input.getChildren().addAll(firstName, middleName, lastName, context, loadPfp, pfpInfo, loadPhoto, photosInfo, save);
         loadPfp.setOnAction(ev -> {
-            pfpPath.set(0, vistasUtilitary.chooseFile(contactStage));
-            pfpInfo.setText("foto de contacto: " + pfpPath.get(0).substring(25));
+            imgPaths.set(0, vistasUtilitary.chooseFile(contactStage));
+            pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
+        });
+        loadPhoto.setOnAction(ev -> {
+            imgPaths.addLast(vistasUtilitary.chooseFile(contactStage));
+            String infotext = "\n"+imgPaths.getReference().getPrevious().getContent().substring(25);
+            photosInfo.setText(photosInfo.getText()+infotext);
         });
         save.setOnAction(ev -> {
-            Contact contact = new Person(context.getText(), pfpPath.get(0), firstName.getText(), middleName.getText(),
-                    lastName.getText());
+            Contact contact = new Person(context.getText(), imgPaths.get(0), firstName.getText(), middleName.getText(),
+                    lastName.getText(), imgPaths);
             saveContact(contact);
             contactStage.close();
         });
@@ -143,16 +147,23 @@ public class ContactsController implements Initializable {
         TextField context = new TextField("Descripción");
         Button loadPfp = new Button("Cargar foto de contacto");
         Label pfpInfo = new Label("foto de perfil no seleccionada");
-        ArrayList<String> pfpPath = new ArrayList<>();
-        pfpPath.addLast("src/main/resources/assets/pfp.png");
+        Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
+        Label photosInfo = new Label("imágenes de la galería:");
+        CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
+        imgPaths.addLast("src/main/resources/assets/pfp.png");
         Button save = new Button("Crear contacto");
-        input.getChildren().addAll(name, context, loadPfp, pfpInfo, save);
+        input.getChildren().addAll(name, context, loadPfp, pfpInfo, loadPhoto, photosInfo, save);
         loadPfp.setOnAction(ev -> {
-            pfpPath.set(0, vistasUtilitary.chooseFile(contactStage));
-            pfpInfo.setText("foto de contacto: " + pfpPath.get(0).substring(25));
+            imgPaths.set(0, vistasUtilitary.chooseFile(contactStage));
+            pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
+        });
+        loadPhoto.setOnAction(ev -> {
+            imgPaths.addLast(vistasUtilitary.chooseFile(contactStage));
+            String infotext = "\n"+imgPaths.getReference().getPrevious().getContent().substring(25);
+            photosInfo.setText(photosInfo.getText()+infotext);
         });
         save.setOnAction(ev -> {
-            Contact contact = new Company(context.getText(), pfpPath.get(0), name.getText());
+            Contact contact = new Company(context.getText(), imgPaths.get(0), name.getText(), imgPaths);
             saveContact(contact);
             contactStage.close();
         });
@@ -179,11 +190,11 @@ public class ContactsController implements Initializable {
     private void showContacts() {
         grid.getChildren().clear();
         int contactsSize = contacts.size();
-        if (contactsSize <= 10) {
+        if (contactsSize <= 9) {
             createContactSlots(contactsSize);
         } else {
             createContactSlots(10);
-            for (int i = 0; i < contacts.size() - 10; i++) {
+            for (int i = 0; i < contactsSize - 10; i++) {
                 cursor = cursor.getNext();
             }
         }
@@ -194,7 +205,8 @@ public class ContactsController implements Initializable {
             Contact contact = cursor.getContent();
             HBox card = new HBox(20);
             Label name = new Label(contact.toString());
-            ImageView pfp = loadPfp(contact.getPfp());
+            ImageView pfp = vistasUtilitary.loadImage(contact.getPfp());
+            vistasUtilitary.cropIntoCircle(pfp, 18);
             card.getChildren().addAll(pfp, name);
             card.setOnMouseClicked(ev -> {
                 ContactCardController.setCurrentContact(contact);
@@ -226,14 +238,6 @@ public class ContactsController implements Initializable {
         }
     }
 
-    private ImageView loadPfp(String path) {
-        ImageView loaded = null;
-        try (FileInputStream in = new FileInputStream(path);) {
-            loaded = new ImageView(new Image(in, 35, 35, false, false));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return loaded;
-    }
+    
 
 }
