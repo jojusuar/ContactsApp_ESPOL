@@ -4,12 +4,24 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.Company;
 import baseClasses.Contact;
+import baseClasses.Person;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import tdas.CircularLinkedList;
+import tdas.DoubleLinkNode;
 
 /**
  * FXML Controller class
@@ -17,9 +29,14 @@ import javafx.fxml.Initializable;
  * @author euclasio
  */
 public class ContactCardController implements Initializable {
-    
+
+    @FXML
+    private VBox fields;
+    private HBox gallery = new HBox(8);
     private static Contact currentContact;
-    
+    private CircularLinkedList<String> photos = currentContact.getPhotos();
+    private DoubleLinkNode<String> cursor = null;
+
     @FXML
     private void switchToContacts() throws IOException {
         App.setRoot("contacts");
@@ -27,12 +44,104 @@ public class ContactCardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }  
-    
-    public static void setCurrentContact(Contact c){
+        cursor = photos.getReference();
+        createFields(currentContact);
+    }
+
+    public static void setCurrentContact(Contact c) {
         currentContact = c;
     }
+
+    private void createFields(Contact c) {
+        ImageView pfp = vistasUtilitary.loadImage(c.getPfp());
+        vistasUtilitary.cropIntoCircle(pfp, 125);
+        HBox banner = new HBox();
+        Label context = new Label(c.getContext());
+        banner.getChildren().addAll(pfp, context);
+        banner.setAlignment(Pos.CENTER);
+        if (c instanceof Person) {
+            Person person = (Person) c;
+            Label namelbl = new Label("nombres:");
+            Label name = new Label(person.getFirstName() + " " + person.getMiddleName());
+            name.setFont(new Font("Times New Roman", 25));
+            Label lastnamelbl = new Label("apellidos:");
+            Label lastname = new Label(person.getLastName());
+            lastname.setFont(new Font("Times New Roman", 25));
+            fields.getChildren().addAll(banner, context, namelbl, name, lastnamelbl, lastname);
+        }
+        else if (c instanceof Company) {
+            Company company = (Company) c;
+            Label namelbl = new Label("nombre:");
+            Label name = new Label(company.getName());
+            name.setFont(new Font("Times New Roman", 25));
+            fields.getChildren().addAll(banner, context, namelbl, name); 
+        }
+        gallery.setOnScroll((ScrollEvent event) -> {
+            double deltaX = event.getDeltaX();
+            if (deltaX > 0) {
+                moveLeft();
+            } else if (deltaX < 0) {
+                moveRight();
+            }
+        });
+        Button leftBtn = new Button("<");
+        Button rightBtn = new Button(">");
+        leftBtn.setOnAction(ev -> {
+            moveLeft();
+        });
+        rightBtn.setOnAction(ev -> {
+            moveRight();
+        });
+        leftBtn.setWrapText(true);
+        rightBtn.setWrapText(true);
+        HBox buttons = new HBox(375);
+        buttons.getChildren().addAll(leftBtn, rightBtn);
+        fields.getChildren().addAll(buttons, gallery);
+        showGallery();
+    }
+
+    private void showGallery() {
+        gallery.getChildren().clear();
+        int gallerySize = photos.size();
+        if (gallerySize <= 3) {
+            createPhotoSlots(gallerySize);
+        } else {
+            createPhotoSlots(3);
+            for (int i = 0; i < gallerySize - 3; i++) {
+                cursor = cursor.getNext();
+            }
+        }
+    }
     
-    
+    private void createPhotoSlots(int k) {
+        for (int i = 0; i < k; i++) {
+            String imagePath = cursor.getContent();
+            ImageView photo = vistasUtilitary.loadImage(imagePath);
+            int width = 64;
+            if(i == 1){
+                width = 288;
+            }
+            photo.setPreserveRatio(true);
+            photo.setFitWidth(width);
+            photo.setSmooth(true);
+            gallery.getChildren().add(photo);
+            cursor = cursor.getNext();
+        }
+    }
+
+    private void moveLeft() {
+        if (cursor != null) {
+            cursor = cursor.getPrevious();
+            showGallery();
+        }
+
+    }
+
+    private void moveRight() {
+        if (cursor != null) {
+            cursor = cursor.getNext();
+            showGallery();
+        }
+    }
+
 }

@@ -15,9 +15,12 @@
             <Button mnemonicParsing="false" text="Eliminar" />
          </children>
       </HBox>
-      <ScrollPane prefHeight="592.0" prefWidth="261.0">
+      <ScrollPane prefHeight="624.0" prefWidth="261.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="592.0" prefWidth="200.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="624.0" prefWidth="245.0">
+               <children>
+                  <VBox id="fields" fx:id="fields" prefHeight="628.0" prefWidth="397.0" spacing="10.0" />
+               </children></AnchorPane>
         </content>
       </ScrollPane>
    </children>
