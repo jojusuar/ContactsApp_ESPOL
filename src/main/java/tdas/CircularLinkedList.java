@@ -45,8 +45,8 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     }
 
     @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean contains(E element) {
+        return indexOf(element) >= 0;
     }
 
     @Override
@@ -199,7 +199,21 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public int indexOf(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int index = 0;
+        if (element == null) {
+            for (DoubleLinkNode<E> x = reference; x != null; x = x.getNext()) {
+                if (x.getContent() == null)
+                    return index;
+                index++;
+            }
+        } else {
+            for (DoubleLinkNode<E> x = reference; x != null; x = x.getNext()) {
+                if (element.equals(x.getContent()))
+                    return index;
+                index++;
+            }
+        }
+        return -1;
     }
 
     @Override
