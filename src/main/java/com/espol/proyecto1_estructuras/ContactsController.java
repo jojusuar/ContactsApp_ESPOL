@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -38,6 +39,7 @@ public class ContactsController implements Initializable {
 
     private static User currentUser = null;
     private static CircularLinkedList<Contact> contacts = null;
+    private static CircularLinkedList<Contact> showingContacts = null;
     private static DoubleLinkNode<Contact> cursor = null;
 
     @FXML
@@ -48,6 +50,15 @@ public class ContactsController implements Initializable {
 
     @FXML
     private Button newContactButton;
+    
+    @FXML
+    private Button buscarButton;
+    
+    @FXML
+    private TextField searchBar;
+
+    @FXML
+    private AnchorPane anchorPane;
 
     @FXML
     private void switchToLogin() throws IOException {
@@ -72,7 +83,8 @@ public class ContactsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         contacts = currentUser.getData().getContacts();
-        cursor = contacts.getReference();
+        showingContacts = currentUser.getData().getContacts();
+        cursor = showingContacts.getReference();
         showContacts();
         grid.setOnScroll((ScrollEvent event) -> {
             double deltaY = event.getDeltaY();
@@ -81,6 +93,41 @@ public class ContactsController implements Initializable {
             } else if (deltaY < 0) {
                 moveDown();
             }
+        });
+        
+        //busqueda sin filtros
+        buscarButton.setOnAction(ev -> {
+             CircularLinkedList<Contact> tempContactList = new CircularLinkedList<Contact>();
+             showingContacts = contacts;
+             cursor = showingContacts.getReference();
+             String s = searchBar.getText().toLowerCase();
+             if(s.isBlank() || s.isEmpty() || s == null){
+                 showingContacts = contacts;
+                 cursor = showingContacts.getReference();
+                 showContacts();
+             }else{
+                 for (int i = 0; i < showingContacts.size(); i++) {
+                     Contact contact = cursor.getContent();
+                     if(contact instanceof Person){
+                         Person p = (Person) contact;
+                         if(p.getFirstName().toLowerCase().contains(s) || p.getLastName().toLowerCase().contains(s) || p.getMiddleName().toLowerCase().contains(s)){
+                             tempContactList.addLast(contact);
+                         }
+                         
+                     }else if(contact instanceof Company){
+                         Company c = (Company) contact;
+                         if(c.getName().toLowerCase().contains(s)){
+                             tempContactList.addLast(contact);
+                         }
+                         
+                     }
+                     cursor = cursor.getNext();
+                 }
+                 showingContacts = tempContactList;
+                 cursor = showingContacts.getReference();
+                 
+                 showContacts();
+             }
         });
     }
 
@@ -165,12 +212,12 @@ public class ContactsController implements Initializable {
 
     private void saveContact(Contact c) {
         boolean empty = false;
-        if (contacts.isEmpty()) {
+        if (showingContacts.isEmpty()) {
             empty = true;
         }
         currentUser.getData().add(c);
         if (empty) {
-            cursor = contacts.getReference();
+            cursor = showingContacts.getReference();
         }
         Memory.save();
         System.out.println(currentUser.getData().getContacts());
@@ -183,7 +230,7 @@ public class ContactsController implements Initializable {
 
     private void showContacts() {
         grid.getChildren().clear();
-        int contactsSize = contacts.size();
+        int contactsSize = showingContacts.size();
         if (contactsSize <= 9) {
             createContactSlots(contactsSize);
         } else {
