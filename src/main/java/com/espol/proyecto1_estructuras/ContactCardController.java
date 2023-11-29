@@ -59,23 +59,8 @@ public class ContactCardController implements Initializable {
         Label context = new Label(c.getContext());
         banner.getChildren().addAll(pfp, context);
         banner.setAlignment(Pos.CENTER);
-        if (c instanceof Person) {
-            Person person = (Person) c;
-            Label namelbl = new Label("nombres:");
-            Label name = new Label(person.getFirstName() + " " + person.getMiddleName());
-            name.setFont(new Font("Times New Roman", 25));
-            Label lastnamelbl = new Label("apellidos:");
-            Label lastname = new Label(person.getLastName());
-            lastname.setFont(new Font("Times New Roman", 25));
-            fields.getChildren().addAll(banner, context, namelbl, name, lastnamelbl, lastname);
-        }
-        else if (c instanceof Company) {
-            Company company = (Company) c;
-            Label namelbl = new Label("nombre:");
-            Label name = new Label(company.getName());
-            name.setFont(new Font("Times New Roman", 25));
-            fields.getChildren().addAll(banner, context, namelbl, name); 
-        }
+        fields.getChildren().addAll(banner, context);
+        contactArbitrator(c);
         gallery.setOnScroll((ScrollEvent event) -> {
             double deltaX = event.getDeltaX();
             if (deltaX > 0) {
@@ -99,6 +84,33 @@ public class ContactCardController implements Initializable {
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
     }
+    
+    private void contactArbitrator(Contact c){
+        if (c instanceof Person) {
+            Person person = (Person) c;
+            createPersonFields(person);
+        } else if (c instanceof Company) {
+            Company company = (Company) c;
+            createCompanyFields(company);
+        }
+    }
+    
+    private void createPersonFields(Person person) {
+        Label namelbl = new Label("nombres:");
+        Label name = new Label(person.getFirstName() + " " + person.getMiddleName());
+        name.setFont(new Font("Times New Roman", 25));
+        Label lastnamelbl = new Label("apellidos:");
+        Label lastname = new Label(person.getLastName());
+        lastname.setFont(new Font("Times New Roman", 25));
+        fields.getChildren().addAll(namelbl, name, lastnamelbl, lastname);
+    }
+
+    private void createCompanyFields(Company company) {
+        Label namelbl = new Label("nombre:");
+        Label name = new Label(company.getName());
+        name.setFont(new Font("Times New Roman", 25));
+        fields.getChildren().addAll(namelbl, name);
+    }
 
     private void showGallery() {
         gallery.getChildren().clear();
@@ -112,13 +124,13 @@ public class ContactCardController implements Initializable {
             }
         }
     }
-    
+
     private void createPhotoSlots(int k) {
         for (int i = 0; i < k; i++) {
             String imagePath = cursor.getContent();
             ImageView photo = vistasUtilitary.loadImage(imagePath);
             int width = 64;
-            if(i == 1){
+            if (i == 1) {
                 width = 288;
             }
             photo.setPreserveRatio(true);
