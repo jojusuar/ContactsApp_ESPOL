@@ -115,23 +115,10 @@ public class ContactsController implements Initializable {
         TextField middleName = new TextField("Segundo nombre");
         TextField lastName = new TextField("Apellido");
         TextField context = new TextField("Descripción");
-        Button loadPfp = new Button("Cargar foto de contacto");
-        Label pfpInfo = new Label("foto de perfil no seleccionada");
-        Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
-        Label photosInfo = new Label("imágenes de la galería:");
-        CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
-        imgPaths.addLast("src/main/resources/assets/pfp.png");
+        input.getChildren().addAll(firstName, middleName, lastName, context);
+        CircularLinkedList<String> imgPaths = galleryWizard(input, contactStage);
         Button save = new Button("Crear contacto");
-        input.getChildren().addAll(firstName, middleName, lastName, context, loadPfp, pfpInfo, loadPhoto, photosInfo, save);
-        loadPfp.setOnAction(ev -> {
-            imgPaths.set(0, vistasUtilitary.chooseFile(contactStage));
-            pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
-        });
-        loadPhoto.setOnAction(ev -> {
-            imgPaths.addLast(vistasUtilitary.chooseFile(contactStage));
-            String infotext = "\n"+imgPaths.getReference().getPrevious().getContent().substring(25);
-            photosInfo.setText(photosInfo.getText()+infotext);
-        });
+        input.getChildren().add(save);
         save.setOnAction(ev -> {
             Contact contact = new Person(context.getText(), imgPaths.get(0), firstName.getText(), middleName.getText(),
                     lastName.getText(), imgPaths);
@@ -145,28 +132,35 @@ public class ContactsController implements Initializable {
         input.getChildren().clear();
         TextField name = new TextField("Empresa");
         TextField context = new TextField("Descripción");
+        input.getChildren().addAll(name, context);
+        CircularLinkedList<String> imgPaths = galleryWizard(input, contactStage);
+        Button save = new Button("Crear contacto");
+        input.getChildren().add(save);
+        save.setOnAction(ev -> {
+            Contact contact = new Company(context.getText(), imgPaths.get(0), name.getText(), imgPaths);
+            saveContact(contact);
+            contactStage.close();
+        });
+    }
+
+    private CircularLinkedList<String> galleryWizard(VBox input, Stage contactStage) {
         Button loadPfp = new Button("Cargar foto de contacto");
         Label pfpInfo = new Label("foto de perfil no seleccionada");
         Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
         Label photosInfo = new Label("imágenes de la galería:");
         CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
         imgPaths.addLast("src/main/resources/assets/pfp.png");
-        Button save = new Button("Crear contacto");
-        input.getChildren().addAll(name, context, loadPfp, pfpInfo, loadPhoto, photosInfo, save);
         loadPfp.setOnAction(ev -> {
             imgPaths.set(0, vistasUtilitary.chooseFile(contactStage));
             pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
         });
         loadPhoto.setOnAction(ev -> {
             imgPaths.addLast(vistasUtilitary.chooseFile(contactStage));
-            String infotext = "\n"+imgPaths.getReference().getPrevious().getContent().substring(25);
-            photosInfo.setText(photosInfo.getText()+infotext);
+            String infotext = "\n" + imgPaths.getReference().getPrevious().getContent().substring(25);
+            photosInfo.setText(photosInfo.getText() + infotext);
         });
-        save.setOnAction(ev -> {
-            Contact contact = new Company(context.getText(), imgPaths.get(0), name.getText(), imgPaths);
-            saveContact(contact);
-            contactStage.close();
-        });
+        input.getChildren().addAll(loadPfp, pfpInfo, loadPhoto, photosInfo);
+        return imgPaths;
     }
 
     private void saveContact(Contact c) {
@@ -237,7 +231,4 @@ public class ContactsController implements Initializable {
             showContacts();
         }
     }
-
-    
-
 }
