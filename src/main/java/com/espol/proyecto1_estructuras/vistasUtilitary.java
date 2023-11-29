@@ -10,11 +10,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tdas.CircularLinkedList;
 
 /**
  *
@@ -68,5 +74,35 @@ public class vistasUtilitary {
         ellipse.setRadiusX(radius);
         ellipse.setRadiusY(radius);
         imageview.setClip(ellipse);
+    }
+    
+    public static CircularLinkedList<String> galleryWizard(VBox input, Stage contactStage) {
+        Button loadPfp = new Button("Cargar foto de contacto");
+        Label pfpInfo = new Label("foto de perfil no seleccionada");
+        Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
+        VBox loadedImages = new VBox();
+        Label photosInfo = new Label("imágenes de la galería:");
+        CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
+        imgPaths.addLast("src/main/resources/assets/pfp.png");
+        loadPfp.setOnAction(ev -> {
+            imgPaths.set(0,vistasUtilitary.chooseFile(contactStage));
+            pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
+        });
+        loadPhoto.setOnAction(ev -> {
+            String imagePath = vistasUtilitary.chooseFile(contactStage);
+            imgPaths.addLast(imagePath);
+            HBox imageName = new HBox();
+            Label infotext = new Label(imgPaths.getReference().getPrevious().getContent().substring(25));
+            Button forget = new Button("X");
+            imageName.getChildren().addAll(infotext, forget);
+            loadedImages.getChildren().add(imageName);
+            forget.setOnAction(ev2 -> {
+                Comparator<String> comp = (String s1, String s2) -> {return s1.compareTo(s2);};
+                System.out.println(imgPaths.remove(imagePath, comp));
+                loadedImages.getChildren().remove(imageName);
+            });
+        });
+        input.getChildren().addAll(loadPfp, pfpInfo, loadPhoto, photosInfo, loadedImages);
+        return imgPaths;
     }
 }

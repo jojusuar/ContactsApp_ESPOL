@@ -9,6 +9,7 @@ import baseClasses.Contact;
 import baseClasses.Person;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -163,7 +164,7 @@ public class ContactsController implements Initializable {
         TextField lastName = new TextField("Apellido");
         TextField context = new TextField("Descripción");
         input.getChildren().addAll(firstName, middleName, lastName, context);
-        CircularLinkedList<String> imgPaths = galleryWizard(input, contactStage);
+        CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
@@ -180,7 +181,7 @@ public class ContactsController implements Initializable {
         TextField name = new TextField("Empresa");
         TextField context = new TextField("Descripción");
         input.getChildren().addAll(name, context);
-        CircularLinkedList<String> imgPaths = galleryWizard(input, contactStage);
+        CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
@@ -190,25 +191,7 @@ public class ContactsController implements Initializable {
         });
     }
 
-    private CircularLinkedList<String> galleryWizard(VBox input, Stage contactStage) {
-        Button loadPfp = new Button("Cargar foto de contacto");
-        Label pfpInfo = new Label("foto de perfil no seleccionada");
-        Button loadPhoto = new Button("Cargar imagen a la galería del contacto");
-        Label photosInfo = new Label("imágenes de la galería:");
-        CircularLinkedList<String> imgPaths = new CircularLinkedList<>();
-        imgPaths.addLast("src/main/resources/assets/pfp.png");
-        loadPfp.setOnAction(ev -> {
-            imgPaths.set(0, vistasUtilitary.chooseFile(contactStage));
-            pfpInfo.setText("foto de contacto: " + imgPaths.get(0).substring(25));
-        });
-        loadPhoto.setOnAction(ev -> {
-            imgPaths.addLast(vistasUtilitary.chooseFile(contactStage));
-            String infotext = "\n" + imgPaths.getReference().getPrevious().getContent().substring(25);
-            photosInfo.setText(photosInfo.getText() + infotext);
-        });
-        input.getChildren().addAll(loadPfp, pfpInfo, loadPhoto, photosInfo);
-        return imgPaths;
-    }
+    
 
     private void saveContact(Contact c) {
         boolean empty = false;
