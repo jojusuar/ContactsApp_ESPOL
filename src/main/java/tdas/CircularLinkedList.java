@@ -27,16 +27,15 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public int size() {
-        if(isEmpty()){
+        if (isEmpty()) {
             return 0;
         }
         DoubleLinkNode current = reference;
         int size = 0;
-        do{
+        do {
             current = current.getNext();
             size++;
-        }
-        while(!current.equals(reference));
+        } while (!current.equals(reference));
         return size;
     }
 
@@ -105,26 +104,37 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         };
         return itr;
     }
+
     @Override
     public String toString() {
-        if(reference!=null){
+        if (reference != null) {
             String string = "";
-        DoubleLinkNode<E> cursor = reference;
-        do{
-            string+=cursor.toString();
-            cursor = cursor.getNext();
-        }
-        while(cursor!=reference);
-        return string;
-        }
-        else{
+            DoubleLinkNode<E> cursor = reference;
+            do {
+                string += cursor.toString();
+                cursor = cursor.getNext();
+            } while (cursor != reference);
+            return string;
+        } else {
             return "";
         }
     }
 
     @Override
     public boolean addFirst(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DoubleLinkNode<E> newNode = new DoubleLinkNode<>(element);
+        if (reference == null) {
+            reference = newNode;
+            reference.setNext(reference);
+            reference.setPrevious(reference);
+        }else{
+            newNode.setNext(reference);
+            newNode.setPrevious(reference.getPrevious());
+            reference.setPrevious(newNode);
+            newNode.getPrevious().setNext(newNode);
+            reference = newNode;
+        }
+        return true;
     }
 
     @Override
@@ -173,13 +183,16 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     public E get(int index) {
         return getNode(index).getContent();
     }
-    
+
     public DoubleLinkNode<E> getNode(int index) {
         DoubleLinkNode<E> current = reference;
         int counter = 0;
-        while(counter<index){
+        while (counter < index) {
             current = current.getNext();
             counter++;
+            if (current == reference) {
+                return null;
+            }
         }
         return current;
     }
@@ -197,6 +210,21 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     @Override
     public boolean remove(E element) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public boolean remove(E element, Comparator<E> comp) {
+        DoubleLinkNode<E> current = reference;
+        do {
+            if (comp.compare(current.getContent(), element) == 0) {
+                current.getPrevious().setNext(current.getNext());
+                current.getNext().setPrevious(current.getPrevious());
+                current.setNext(null);
+                current.setPrevious(null);
+                return true;
+            }
+            current = current.getNext();
+        } while (current != reference);
+        return false;
     }
 
     @Override
