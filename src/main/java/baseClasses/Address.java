@@ -14,7 +14,6 @@ public class Address implements Serializable{
     private String code;
     private String city;
     private String country;
-    private String gMaps;
 
     public Address(String context, String street1, String street2) {
         this.context = context;
@@ -22,14 +21,13 @@ public class Address implements Serializable{
         this.street2 = street2;
     }
 
-    public Address(String context, String street1, String street2, String code, String city, String country, String gMaps) {
+    public Address(String context, String street1, String street2, String code, String city, String country) {
         this.context = context;
         this.street1 = street1;
         this.street2 = street2;
         this.code = code;
         this.city = city;
         this.country = country;
-        this.gMaps = gMaps;
     }
 
     public String getContext() {
@@ -56,9 +54,6 @@ public class Address implements Serializable{
         return country;
     }
 
-    public String getgMaps() {
-        return gMaps;
-    }
 
     public void setContext(String context) {
         this.context = context;
@@ -84,10 +79,6 @@ public class Address implements Serializable{
         this.country = country;
     }
 
-    public void setgMaps(String gMaps) {
-        this.gMaps = gMaps;
-    }
-    
     @Override
     public String toString(){
         return street1+" y "+street2+", "+city+", "+country;
