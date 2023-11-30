@@ -9,6 +9,7 @@ import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Email;
 import baseClasses.Handle;
+import baseClasses.IconicDate;
 import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
@@ -88,12 +89,13 @@ public class ContactCardController implements Initializable {
         showEmails();
         showAddresses();
         showHandles();
+        showDates();
         buttons.getChildren().addAll(leftBtn, rightBtn);
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
     }
-    
-    private void contactArbitrator(Contact c){
+
+    private void contactArbitrator(Contact c) {
         if (c instanceof Person) {
             Person person = (Person) c;
             createPersonFields(person);
@@ -102,7 +104,7 @@ public class ContactCardController implements Initializable {
             createCompanyFields(company);
         }
     }
-    
+
     private void createPersonFields(Person person) {
         Label namelbl = new Label("nombres:");
         Label name = new Label(person.getFirstName() + " " + person.getMiddleName());
@@ -132,28 +134,34 @@ public class ContactCardController implements Initializable {
             }
         }
     }
-    
+
     private void showPhoneNumbers() {
-        for(PhoneNumber p: currentContact.getPhoneNumbers()){
-            fields.getChildren().add(new Label(p.getContext()+": \n"+p.toString()+"\n"));
+        for (PhoneNumber p : currentContact.getPhoneNumbers()) {
+            fields.getChildren().add(new Label(p.getContext() + ": \n" + p.toString() + "\n"));
         }
     }
-    
+
     private void showEmails() {
-        for(Email e: currentContact.getEmails()){
-            fields.getChildren().add(new Label(e.getContext()+": \n"+e.toString()+"\n"));
+        for (Email e : currentContact.getEmails()) {
+            fields.getChildren().add(new Label(e.getContext() + ": \n" + e.toString() + "\n"));
         }
     }
-    
+
     private void showAddresses() {
-        for(Address a: currentContact.getAddresses()){
-            fields.getChildren().add(new Label(a.getContext()+": \n"+a.toString()+"\n"));
+        for (Address a : currentContact.getAddresses()) {
+            fields.getChildren().add(new Label(a.getContext() + ": \n" + a.toString() + "\n"));
+        }
+    }
+
+    private void showHandles() {
+        for (Handle h : currentContact.getHandles()) {
+            fields.getChildren().add(new Label(h.toString() + "\n"));
         }
     }
     
-        private void showHandles() {
-        for(Handle h: currentContact.getHandles()){
-            fields.getChildren().add(new Label(h.toString()+"\n"));
+    private void showDates() {
+        for (IconicDate i : currentContact.getDates()) {
+            fields.getChildren().add(new Label(i.toString() + "\n"));
         }
     }
 
@@ -186,6 +194,6 @@ public class ContactCardController implements Initializable {
             cursor = cursor.getNext();
             showGallery();
         }
-    }  
+    }
 
 }

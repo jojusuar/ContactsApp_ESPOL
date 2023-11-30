@@ -9,6 +9,7 @@ import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Email;
 import baseClasses.Handle;
+import baseClasses.IconicDate;
 import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
@@ -173,6 +174,7 @@ public class ContactsController implements Initializable {
         ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
         ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
         ArrayList<Handle> handleList = vistasUtilitary.handleWizard(input);
+        ArrayList<IconicDate> iconicDateList = vistasUtilitary.iconicDateWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
@@ -182,6 +184,7 @@ public class ContactsController implements Initializable {
             contact.setEmails(emailList);
             contact.setAddresses(addressList);
             contact.setHandles(handleList);
+            contact.setDates(iconicDateList);
             saveContact(contact);
             contactStage.close();
         });
@@ -198,6 +201,7 @@ public class ContactsController implements Initializable {
         ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
         ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
         ArrayList<Handle> handleList = vistasUtilitary.handleWizard(input);
+        ArrayList<IconicDate> iconicDateList = vistasUtilitary.iconicDateWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
@@ -206,6 +210,7 @@ public class ContactsController implements Initializable {
             contact.setEmails(emailList);
             contact.setAddresses(addressList);
             contact.setHandles(handleList);
+            contact.setDates(iconicDateList);
             saveContact(contact);
             contactStage.close();
         });

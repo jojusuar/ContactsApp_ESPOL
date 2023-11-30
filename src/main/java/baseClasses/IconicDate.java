@@ -3,6 +3,7 @@ package baseClasses;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -10,18 +11,24 @@ import java.text.SimpleDateFormat;
  */
 public class IconicDate implements Serializable{
     private String context;
-    private SimpleDateFormat date;
+    private Date date;
 
-    public IconicDate(String context, String date) {
+    public IconicDate(String context, String day, String month, String year) {
         this.context = context;
-        this.date = new SimpleDateFormat(date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try{
+            this.date = dateFormat.parse(day+"/"+month+"/"+year);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public String getContext() {
         return context;
     }
 
-    public SimpleDateFormat getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -29,13 +36,14 @@ public class IconicDate implements Serializable{
         this.context = context;
     }
 
-    public void setDate(SimpleDateFormat date) {
+    public void setDate(Date date) {
         this.date = date;
     }
     
     @Override
     public String toString(){
-        return context+": "+date;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return context+": "+dateFormat.format(date);
     }
     
 }
