@@ -12,11 +12,11 @@ public class PhoneNumber implements Serializable {
     private int countryCode;
     private int number;
 
-    public PhoneNumber(String context, int number) {
-        this.context = context;
-        this.countryCode = 593;
-        this.number = number;
-    }
+//    public PhoneNumber(String context, int number) {
+//        this.context = context;
+//        this.countryCode = 593;
+//        this.number = number;
+//    }
 
     public PhoneNumber(String context, int countryCode, int number) {
         this.context = context;

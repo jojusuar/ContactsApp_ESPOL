@@ -4,6 +4,7 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.PhoneNumber;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -20,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tdas.ArrayList;
 import tdas.CircularLinkedList;
 
 /**
@@ -98,11 +101,45 @@ public class vistasUtilitary {
             loadedImages.getChildren().add(imageName);
             forget.setOnAction(ev2 -> {
                 Comparator<String> comp = (String s1, String s2) -> {return s1.compareTo(s2);};
-                System.out.println(imgPaths.remove(imagePath, comp));
+                imgPaths.remove(imagePath, comp);
                 loadedImages.getChildren().remove(imageName);
             });
         });
         input.getChildren().addAll(loadPfp, pfpInfo, loadPhoto, photosInfo, loadedImages);
         return imgPaths;
+    }
+    
+    public static ArrayList<PhoneNumber> phoneWizard(VBox input){
+        Button newPhoneBtn = new Button("Agregar número de teléfono");
+        VBox phoneVb = new VBox();
+        ArrayList<PhoneNumber> phoneList = new ArrayList<>();
+        newPhoneBtn.setOnAction(ev -> {
+            HBox phoneFields = new HBox();
+            TextField code = new TextField("código");
+            TextField number = new TextField("número");
+            TextField context = new TextField("contexto");
+            Button add = new Button("O");
+            Button abort = new Button("X");
+            phoneFields.getChildren().addAll(code, number, context, add,abort);
+            phoneVb.getChildren().add(phoneFields);
+            add.setOnAction(ev2 -> {
+                PhoneNumber phoneNumber = new PhoneNumber(context.getText(), Integer.parseInt(code.getText()), Integer.parseInt(number.getText()));
+                phoneList.addLast(phoneNumber);
+                phoneFields.getChildren().clear();
+                Label lbl = new Label(phoneNumber.getContext()+": "+phoneNumber.toString());
+                Button forget = new Button("X");
+                phoneFields.getChildren().addAll(lbl, forget);
+                forget.setOnAction(ev3 -> {
+                   Comparator<PhoneNumber> comp = (PhoneNumber p1, PhoneNumber p2) -> {return p1.toString().compareTo(p2.toString());}; 
+                   phoneList.remove(phoneNumber, comp);
+                   phoneVb.getChildren().remove(phoneFields);
+                });
+            });
+            abort.setOnAction(ev2 -> {
+                phoneVb.getChildren().remove(phoneFields);
+            });
+        });
+        input.getChildren().addAll(newPhoneBtn, phoneVb);
+        return phoneList;
     }
 }
