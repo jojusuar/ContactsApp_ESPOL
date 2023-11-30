@@ -4,6 +4,7 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.Address;
 import baseClasses.Email;
 import baseClasses.PhoneNumber;
 import java.io.File;
@@ -175,5 +176,42 @@ public class vistasUtilitary {
         });
         input.getChildren().addAll(newEmailBtn, emailVb);
         return emailList;
+    }
+    
+    public static ArrayList<Address> addressWizard(VBox input){
+        Button newAddressBtn = new Button("Agregar dirección");
+        VBox addressVb = new VBox();
+        ArrayList<Address> addressList = new ArrayList<>();
+        newAddressBtn.setOnAction(ev -> {
+            VBox addressFields = new VBox();
+            TextField code = new TextField("código");
+            TextField street1 = new TextField("calle 1");
+            TextField street2 = new TextField("calle 2");
+            TextField city = new TextField("ciudad");
+            TextField country = new TextField("país");
+            TextField context = new TextField("contexto");
+            Button add = new Button("agregar");
+            Button abort = new Button("cancelar");
+            addressFields.getChildren().addAll(code, street1, street2, city, country, context, add,abort);
+            addressVb.getChildren().add(addressFields);
+            add.setOnAction(ev2 -> {
+                Address address = new Address(context.getText(), street1.getText(), street2.getText(), code.getText(), city.getText(), country.getText());
+                addressList.addLast(address);
+                addressFields.getChildren().clear();
+                Label lbl = new Label(address.getContext()+": "+address.toString());
+                Button forget = new Button("X");
+                addressFields.getChildren().addAll(lbl, forget);
+                forget.setOnAction(ev3 -> {
+                   Comparator<Address> comp = (Address p1, Address p2) -> {return p1.toString().compareTo(p2.toString());}; 
+                   addressList.remove(address, comp);
+                   addressVb.getChildren().remove(addressFields);
+                });
+            });
+            abort.setOnAction(ev2 -> {
+                addressVb.getChildren().remove(addressFields);
+            });
+        });
+        input.getChildren().addAll(newAddressBtn, addressVb);
+        return addressList;
     }
 }

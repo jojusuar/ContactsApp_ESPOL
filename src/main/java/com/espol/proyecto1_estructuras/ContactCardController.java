@@ -4,6 +4,7 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.Address;
 import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Email;
@@ -84,6 +85,7 @@ public class ContactCardController implements Initializable {
         HBox buttons = new HBox(375);
         showPhoneNumbers();
         showEmails();
+        showAddresses();
         buttons.getChildren().addAll(leftBtn, rightBtn);
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
@@ -138,6 +140,12 @@ public class ContactCardController implements Initializable {
     private void showEmails() {
         for(Email e: currentContact.getEmails()){
             fields.getChildren().add(new Label(e.getContext()+": \n"+e.toString()+"\n"));
+        }
+    }
+    
+    private void showAddresses() {
+        for(Address a: currentContact.getAddresses()){
+            fields.getChildren().add(new Label(a.getContext()+": \n"+a.toString()+"\n"));
         }
     }
 

@@ -4,6 +4,7 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.Address;
 import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Email;
@@ -169,6 +170,7 @@ public class ContactsController implements Initializable {
         CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
         ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
+        ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
@@ -176,6 +178,7 @@ public class ContactsController implements Initializable {
                     lastName.getText(), imgPaths);
             contact.setPhoneNumbers(phoneList);
             contact.setEmails(emailList);
+            contact.setAddresses(addressList);
             saveContact(contact);
             contactStage.close();
         });
@@ -190,12 +193,14 @@ public class ContactsController implements Initializable {
         CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
         ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
+        ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
             Contact contact = new Company(context.getText(), imgPaths.get(0), name.getText(), imgPaths);
             contact.setPhoneNumbers(phoneList);
             contact.setEmails(emailList);
+            contact.setAddresses(addressList);
             saveContact(contact);
             contactStage.close();
         });
