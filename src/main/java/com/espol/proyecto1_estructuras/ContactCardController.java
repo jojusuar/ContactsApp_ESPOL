@@ -6,6 +6,7 @@ package com.espol.proyecto1_estructuras;
 
 import baseClasses.Company;
 import baseClasses.Contact;
+import baseClasses.Email;
 import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
@@ -82,6 +83,7 @@ public class ContactCardController implements Initializable {
         rightBtn.setWrapText(true);
         HBox buttons = new HBox(375);
         showPhoneNumbers();
+        showEmails();
         buttons.getChildren().addAll(leftBtn, rightBtn);
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
@@ -132,6 +134,12 @@ public class ContactCardController implements Initializable {
             fields.getChildren().add(new Label(p.getContext()+": \n"+p.toString()+"\n"));
         }
     }
+    
+    private void showEmails() {
+        for(Email e: currentContact.getEmails()){
+            fields.getChildren().add(new Label(e.getContext()+": \n"+e.toString()+"\n"));
+        }
+    }
 
     private void createPhotoSlots(int k) {
         for (int i = 0; i < k; i++) {
@@ -162,6 +170,6 @@ public class ContactCardController implements Initializable {
             cursor = cursor.getNext();
             showGallery();
         }
-    }
+    }  
 
 }
