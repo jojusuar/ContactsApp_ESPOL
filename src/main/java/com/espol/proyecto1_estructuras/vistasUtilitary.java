@@ -4,6 +4,7 @@
  */
 package com.espol.proyecto1_estructuras;
 
+import baseClasses.Email;
 import baseClasses.PhoneNumber;
 import java.io.File;
 import java.io.FileInputStream;
@@ -141,5 +142,38 @@ public class vistasUtilitary {
         });
         input.getChildren().addAll(newPhoneBtn, phoneVb);
         return phoneList;
+    }
+    
+    public static ArrayList<Email> emailWizard(VBox input){
+        Button newEmailBtn = new Button("Agregar correo electrónico");
+        VBox emailVb = new VBox();
+        ArrayList<Email> emailList = new ArrayList<>();
+        newEmailBtn.setOnAction(ev -> {
+            HBox emailFields = new HBox();
+            TextField mailTf = new TextField("email");
+            TextField context = new TextField("contexto");
+            Button add = new Button("O");
+            Button abort = new Button("X");
+            emailFields.getChildren().addAll(mailTf, context, add,abort);
+            emailVb.getChildren().add(emailFields);
+            add.setOnAction(ev2 -> {
+                Email email = new Email(context.getText(), mailTf.getText());
+                emailList.addLast(email);
+                emailFields.getChildren().clear();
+                Label lbl = new Label(email.getContext()+": "+email.toString());
+                Button forget = new Button("X");
+                emailFields.getChildren().addAll(lbl, forget);
+                forget.setOnAction(ev3 -> {
+                   Comparator<Email> comp = (Email e1, Email e2) -> {return e1.toString().compareTo(e2.toString());}; 
+                   emailList.remove(email, comp);
+                   emailVb.getChildren().remove(emailFields);
+                });
+            });
+            abort.setOnAction(ev2 -> {
+                emailVb.getChildren().remove(emailFields);
+            });
+        });
+        input.getChildren().addAll(newEmailBtn, emailVb);
+        return emailList;
     }
 }

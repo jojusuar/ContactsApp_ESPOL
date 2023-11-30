@@ -6,6 +6,7 @@ package com.espol.proyecto1_estructuras;
 
 import baseClasses.Company;
 import baseClasses.Contact;
+import baseClasses.Email;
 import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
@@ -167,12 +168,14 @@ public class ContactsController implements Initializable {
         input.getChildren().addAll(firstName, middleName, lastName, context);
         CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
+        ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
             Contact contact = new Person(context.getText(), imgPaths.get(0), firstName.getText(), middleName.getText(),
                     lastName.getText(), imgPaths);
             contact.setPhoneNumbers(phoneList);
+            contact.setEmails(emailList);
             saveContact(contact);
             contactStage.close();
         });
@@ -186,11 +189,13 @@ public class ContactsController implements Initializable {
         input.getChildren().addAll(name, context);
         CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, contactStage);
         ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
+        ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
         Button save = new Button("Crear contacto");
         input.getChildren().add(save);
         save.setOnAction(ev -> {
             Contact contact = new Company(context.getText(), imgPaths.get(0), name.getText(), imgPaths);
             contact.setPhoneNumbers(phoneList);
+            contact.setEmails(emailList);
             saveContact(contact);
             contactStage.close();
         });
