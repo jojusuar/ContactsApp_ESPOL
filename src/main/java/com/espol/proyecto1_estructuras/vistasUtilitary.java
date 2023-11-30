@@ -7,6 +7,7 @@ package com.espol.proyecto1_estructuras;
 import baseClasses.Address;
 import baseClasses.Email;
 import baseClasses.Handle;
+import baseClasses.IconicDate;
 import baseClasses.PhoneNumber;
 import java.io.File;
 import java.io.FileInputStream;
@@ -247,5 +248,40 @@ public class vistasUtilitary {
         });
         input.getChildren().addAll(newHandleBtn, handleVb);
         return handleList;
+    }
+    
+    public static ArrayList<IconicDate> iconicDateWizard(VBox input){
+        Button newIconicDateBtn = new Button("Agregar fecha especial");
+        VBox iconicDateVb = new VBox();
+        ArrayList<IconicDate> iconicDateList = new ArrayList<>();
+        newIconicDateBtn.setOnAction(ev -> {
+            HBox iconicDateFields = new HBox();
+            TextField day = new TextField("dd");
+            TextField month = new TextField("mm");
+            TextField year = new TextField("yyyy");
+            TextField context = new TextField("contexto");
+            Button add = new Button("O");
+            Button abort = new Button("X");
+            iconicDateFields.getChildren().addAll(day, month, year, context, add,abort);
+            iconicDateVb.getChildren().add(iconicDateFields);
+            add.setOnAction(ev2 -> {
+                IconicDate iconicDate = new IconicDate(context.getText(), day.getText(), month.getText(), year.getText());
+                iconicDateList.addLast(iconicDate);
+                iconicDateFields.getChildren().clear();
+                Label lbl = new Label(iconicDate.toString());
+                Button forget = new Button("X");
+                iconicDateFields.getChildren().addAll(lbl, forget);
+                forget.setOnAction(ev3 -> {
+                   Comparator<IconicDate> comp = (IconicDate d1, IconicDate d2) -> {return d1.toString().compareTo(d2.toString());}; 
+                   iconicDateList.remove(iconicDate, comp);
+                   iconicDateVb.getChildren().remove(iconicDateFields);
+                });
+            });
+            abort.setOnAction(ev2 -> {
+                iconicDateVb.getChildren().remove(iconicDateFields);
+            });
+        });
+        input.getChildren().addAll(newIconicDateBtn, iconicDateVb);
+        return iconicDateList;
     }
 }
