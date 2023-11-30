@@ -34,6 +34,6 @@ public class Handle implements Serializable {
     
     @Override
     public String toString(){
-        return "@"+username;
+        return socialNetwork+": @"+username;
     }
 }

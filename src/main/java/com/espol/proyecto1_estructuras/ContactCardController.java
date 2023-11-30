@@ -8,6 +8,7 @@ import baseClasses.Address;
 import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Email;
+import baseClasses.Handle;
 import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
@@ -86,6 +87,7 @@ public class ContactCardController implements Initializable {
         showPhoneNumbers();
         showEmails();
         showAddresses();
+        showHandles();
         buttons.getChildren().addAll(leftBtn, rightBtn);
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
@@ -146,6 +148,12 @@ public class ContactCardController implements Initializable {
     private void showAddresses() {
         for(Address a: currentContact.getAddresses()){
             fields.getChildren().add(new Label(a.getContext()+": \n"+a.toString()+"\n"));
+        }
+    }
+    
+        private void showHandles() {
+        for(Handle h: currentContact.getHandles()){
+            fields.getChildren().add(new Label(h.toString()+"\n"));
         }
     }
 

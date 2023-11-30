@@ -6,6 +6,7 @@ package com.espol.proyecto1_estructuras;
 
 import baseClasses.Address;
 import baseClasses.Email;
+import baseClasses.Handle;
 import baseClasses.PhoneNumber;
 import java.io.File;
 import java.io.FileInputStream;
@@ -213,5 +214,38 @@ public class vistasUtilitary {
         });
         input.getChildren().addAll(newAddressBtn, addressVb);
         return addressList;
+    }
+    
+    public static ArrayList<Handle> handleWizard(VBox input){
+        Button newHandleBtn = new Button("Agregar red social");
+        VBox handleVb = new VBox();
+        ArrayList<Handle> handleList = new ArrayList<>();
+        newHandleBtn.setOnAction(ev -> {
+            HBox handleFields = new HBox();
+            TextField handleTf = new TextField("usuario");
+            TextField socialNetwork = new TextField("red social");
+            Button add = new Button("O");
+            Button abort = new Button("X");
+            handleFields.getChildren().addAll(handleTf, socialNetwork, add,abort);
+            handleVb.getChildren().add(handleFields);
+            add.setOnAction(ev2 -> {
+                Handle handle = new Handle(handleTf.getText(), socialNetwork.getText());
+                handleList.addLast(handle);
+                handleFields.getChildren().clear();
+                Label lbl = new Label(handle.toString());
+                Button forget = new Button("X");
+                handleFields.getChildren().addAll(lbl, forget);
+                forget.setOnAction(ev3 -> {
+                   Comparator<Handle> comp = (Handle h1, Handle h2) -> {return h1.toString().compareTo(h2.toString());}; 
+                   handleList.remove(handle, comp);
+                   handleVb.getChildren().remove(handleFields);
+                });
+            });
+            abort.setOnAction(ev2 -> {
+                handleVb.getChildren().remove(handleFields);
+            });
+        });
+        input.getChildren().addAll(newHandleBtn, handleVb);
+        return handleList;
     }
 }
