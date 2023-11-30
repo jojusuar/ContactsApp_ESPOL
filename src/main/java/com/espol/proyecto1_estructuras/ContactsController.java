@@ -14,6 +14,7 @@ import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,6 +70,9 @@ public class ContactsController implements Initializable {
 
     @FXML
     private AnchorPane anchorPane;
+    
+    @FXML
+    private ComboBox<String> orderByCb;
 
     @FXML
     private void switchToLogin() throws IOException {
@@ -106,6 +110,15 @@ public class ContactsController implements Initializable {
         });
         filterCb.getItems().addAll("por nombre", "por teléfono", "por ciudad");
         filterCb.getSelectionModel().selectFirst();
+        orderByCb.getItems().addAll("Nombre y Apellido", "Empresa", "Pais");
+        orderByCb.setOnAction(e ->{
+            String s = orderByCb.getValue();
+            showingContacts = contacts;
+            cursor = showingContacts.getReference();
+            filter(s);
+            sort(getComparator(s));
+            
+        });
     }
 
     @FXML
@@ -133,7 +146,7 @@ public class ContactsController implements Initializable {
             showContacts();
         }
     }
-
+    
     private void nameFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
             Contact contact = cursor.getContent();
@@ -185,7 +198,105 @@ public class ContactsController implements Initializable {
             cursor = cursor.getNext();
         }
     }
-
+    
+    private void sort(Comparator<Contact> comparator){
+        CircularLinkedList<Contact> tempContactList = showingContacts;
+        for (int i = 0; i < tempContactList.size(); i++){
+            for (int j = i+1; j < tempContactList.size(); j++){
+                if (comparator.compare(tempContactList.get(i), tempContactList.get(j)) < 0){
+                    //se intercambian ya que el primer elemento debe estar despues del segundo elemento
+                    Contact temp1 = tempContactList.get(j);
+                    Contact temp2 = tempContactList.get(i);
+                    tempContactList.set(i,temp1);
+                    tempContactList.set(j,temp2);
+                }
+            }   
+        }
+        showingContacts = tempContactList;
+        cursor = showingContacts.getReference();
+        showContacts();
+        
+    }
+        
+    
+    public Comparator<Contact> getComparator(String option){
+        Comparator<Contact> comparator = null;
+        if(option.compareTo("Nombre y Apellido")==0){
+            comparator = new Comparator<Contact>() {
+                @Override
+                public int compare(Contact o1, Contact o2) {
+                    Person p1 = (Person) o1;
+                    Person p2 = (Person) o2;
+                    int comparacionNombre = p2.getFirstName().compareTo(p1.getFirstName());
+                    if(comparacionNombre == 0){
+                        return p2.getLastName().compareTo(p1.getLastName());
+                    }
+                    return comparacionNombre;
+                }
+             }; 
+        }else if(option.compareTo("Empresa")==0){
+            comparator = new Comparator<Contact>() {
+                @Override
+                public int compare(Contact o1, Contact o2) {
+                    Company c1 = (Company) o1;
+                    Company c2 = (Company) o2;
+                    return c2.getName().compareTo(c1.getName());
+                }
+             };
+        }else if(option.compareTo("Pais")==0){
+            comparator = new Comparator<Contact>() {
+                @Override
+                public int compare(Contact o1, Contact o2) {
+                    return o2.getAddresses().getFirst().getCountry().compareTo(o1.getAddresses().getFirst().getCountry());
+                }
+             };
+        }
+        return comparator;
+    }
+    
+    public void filter(String option){
+        CircularLinkedList<Contact> tempContactList = new CircularLinkedList<>();
+        System.out.println(option);
+        System.out.println("------------------------------------");
+        if(option.compareTo("Nombre y Apellido")==0){
+                for (int i = 0; i < showingContacts.size(); i++) {
+                    Contact contact = cursor.getContent();
+                    if(contact instanceof Person){
+                        Person p = (Person) contact;
+                        if(p.getFirstName() != null && p.getLastName() != null){
+                            tempContactList.addLast(contact);
+                            System.out.println("nombre y apellido");
+                        }
+                    } 
+                    cursor = cursor.getNext();
+                }
+        }else if(option.compareTo("Empresa")==0){
+                for (int i = 0; i < showingContacts.size(); i++) {
+                    Contact contact = cursor.getContent();
+                    if(contact instanceof Company){
+                        Company c = (Company) contact;
+                        if(c.getName() != null){
+                            tempContactList.addLast(contact);
+                            System.out.println("Empresa");
+                        }
+                    } 
+                    cursor = cursor.getNext();
+                }
+        }else if(option.compareTo("Pais")==0){
+                for (int i = 0; i < showingContacts.size(); i++) {
+                    Contact contact = cursor.getContent();
+                    if(!contact.getAddresses().isEmpty()){
+                        tempContactList.addLast(contact);
+                        System.out.println("Pais");
+                    } 
+                    cursor = cursor.getNext();
+                }
+        }
+        System.out.println(tempContactList);
+        showingContacts = tempContactList;
+        cursor = showingContacts.getReference();
+    }
+    
     @FXML
     private void newContact() {
         VBox fields = new VBox(10);
