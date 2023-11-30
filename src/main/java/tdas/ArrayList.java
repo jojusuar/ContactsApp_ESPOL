@@ -234,6 +234,20 @@ public class ArrayList<E> implements List<E>, Serializable {
 
         return false;
     }
+    public boolean remove(E element, Comparator<E> comp) {
+        if (element == null) {
+            return false;
+        }
+
+        for (int i = 0; i < effectiveSize; i++) {
+            if (comp.compare(this.get(i), element)==0) {
+                remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     @Override
     public E set(int index, E element) {

@@ -39,6 +39,42 @@ public abstract class Contact implements Serializable {
         this.relatedContacts = new CircularLinkedList<>();
     }
 
+    public void setCommonGroups(ArrayList<Group> commonGroups) {
+        this.commonGroups = commonGroups;
+    }
+
+    public void setTraits(ArrayList<String> traits) {
+        this.traits = traits;
+    }
+
+    public void setPhoneNumbers(ArrayList<PhoneNumber> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public void setAddresses(ArrayList<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    public void setEmails(ArrayList<Email> emails) {
+        this.emails = emails;
+    }
+
+    public void setHandles(ArrayList<Handle> handles) {
+        this.handles = handles;
+    }
+
+    public void setPhotos(CircularLinkedList<String> photos) {
+        this.photos = photos;
+    }
+
+    public void setDates(ArrayList<IconicDate> dates) {
+        this.dates = dates;
+    }
+
+    public void setRelatedContacts(CircularLinkedList<Contact> relatedContacts) {
+        this.relatedContacts = relatedContacts;
+    }
+
     public String getContext() {
         return context;
     }

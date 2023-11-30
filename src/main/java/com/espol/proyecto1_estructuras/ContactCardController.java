@@ -7,6 +7,7 @@ package com.espol.proyecto1_estructuras;
 import baseClasses.Company;
 import baseClasses.Contact;
 import baseClasses.Person;
+import baseClasses.PhoneNumber;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -80,6 +81,7 @@ public class ContactCardController implements Initializable {
         leftBtn.setWrapText(true);
         rightBtn.setWrapText(true);
         HBox buttons = new HBox(375);
+        showPhoneNumbers();
         buttons.getChildren().addAll(leftBtn, rightBtn);
         fields.getChildren().addAll(buttons, gallery);
         showGallery();
@@ -122,6 +124,12 @@ public class ContactCardController implements Initializable {
             for (int i = 0; i < gallerySize - 3; i++) {
                 cursor = cursor.getNext();
             }
+        }
+    }
+    
+    private void showPhoneNumbers() {
+        for(PhoneNumber p: currentContact.getPhoneNumbers()){
+            fields.getChildren().add(new Label(p.getContext()+": \n"+p.toString()+"\n"));
         }
     }
 
