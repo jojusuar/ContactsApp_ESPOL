@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -56,12 +57,15 @@ public class ContactsController implements Initializable {
 
     @FXML
     private Button newContactButton;
-    
+
     @FXML
     private Button buscarButton;
-    
+
     @FXML
     private TextField searchBar;
+
+    @FXML
+    private ComboBox filterCb;
 
     @FXML
     private AnchorPane anchorPane;
@@ -100,41 +104,86 @@ public class ContactsController implements Initializable {
                 moveDown();
             }
         });
-        
-        //busqueda sin filtros
-        buscarButton.setOnAction(ev -> {
-             CircularLinkedList<Contact> tempContactList = new CircularLinkedList<Contact>();
-             showingContacts = contacts;
-             cursor = showingContacts.getReference();
-             String s = searchBar.getText().toLowerCase();
-             if(s.isBlank() || s.isEmpty() || s == null){
-                 showingContacts = contacts;
-                 cursor = showingContacts.getReference();
-                 showContacts();
-             }else{
-                 for (int i = 0; i < showingContacts.size(); i++) {
-                     Contact contact = cursor.getContent();
-                     if(contact instanceof Person){
-                         Person p = (Person) contact;
-                         if(p.getFirstName().toLowerCase().contains(s) || p.getLastName().toLowerCase().contains(s) || p.getMiddleName().toLowerCase().contains(s)){
-                             tempContactList.addLast(contact);
-                         }
-                         
-                     }else if(contact instanceof Company){
-                         Company c = (Company) contact;
-                         if(c.getName().toLowerCase().contains(s)){
-                             tempContactList.addLast(contact);
-                         }
-                         
-                     }
-                     cursor = cursor.getNext();
-                 }
-                 showingContacts = tempContactList;
-                 cursor = showingContacts.getReference();
-                 
-                 showContacts();
-             }
-        });
+        filterCb.getItems().addAll("por nombre", "por teléfono", "por ciudad");
+        filterCb.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void search() {
+        CircularLinkedList<Contact> tempContactList = new CircularLinkedList<>();
+        showingContacts = contacts;
+        cursor = showingContacts.getReference();
+        String s = searchBar.getText().toLowerCase();
+        if (s.isBlank() || s.isEmpty()) {
+            showingContacts = contacts;
+            cursor = showingContacts.getReference();
+            showContacts();
+        } else {
+            String filter = (String) filterCb.getValue();
+            if (filter.compareTo("por nombre") == 0) {
+                nameFilter(s, tempContactList);
+            } else if (filter.compareTo("por teléfono") == 0) {
+                phoneFilter(s, tempContactList);
+            }
+            else if(filter.compareTo("por ciudad") == 0){
+                cityFilter(s,tempContactList);
+            }
+            showingContacts = tempContactList;
+            cursor = showingContacts.getReference();
+            showContacts();
+        }
+    }
+
+    private void nameFilter(String query, CircularLinkedList<Contact> list) {
+        for (int i = 0; i < showingContacts.size(); i++) {
+            Contact contact = cursor.getContent();
+            String fullname = "";
+            if (contact instanceof Person) {
+                Person p = (Person) contact;
+                fullname = p.getFirstName() + " " + p.getMiddleName() + " " + p.getLastName();
+
+            } else if (contact instanceof Company) {
+                Company c = (Company) contact;
+                fullname = c.getName();
+            }
+            if (fullname.toLowerCase().contains(query.toLowerCase())) {
+                list.addLast(contact);
+            }
+            cursor = cursor.getNext();
+        }
+    }
+
+    private void phoneFilter(String query, CircularLinkedList<Contact> list) {
+        for (int i = 0; i < showingContacts.size(); i++) {
+            Contact contact = cursor.getContent();
+            ArrayList<PhoneNumber> phonelist = contact.getPhoneNumbers();
+            if (!phonelist.isEmpty()) {
+                for (PhoneNumber phone : phonelist) {
+                    if (phone.toString().contains(query)) {
+                        list.addLast(contact);
+                    }
+                }
+            }
+            cursor = cursor.getNext();
+        }
+    }
+    private void cityFilter(String query, CircularLinkedList<Contact> list) {
+        for (int i = 0; i < showingContacts.size(); i++) {
+            Contact contact = cursor.getContent();
+            ArrayList<Address> addressList = contact.getAddresses();
+            boolean match = false;
+            if (!addressList.isEmpty()) {
+                for (Address address : addressList) {
+                    if (address.getCity().contains(query)) {
+                        match = true;
+                    }
+                }
+            }
+            if(match){
+                list.addLast(contact);
+            }
+            cursor = cursor.getNext();
+        }
     }
 
     @FXML
@@ -215,8 +264,6 @@ public class ContactsController implements Initializable {
             contactStage.close();
         });
     }
-
-    
 
     private void saveContact(Contact c) {
         boolean empty = false;
