@@ -18,16 +18,20 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import persistence.Memory;
+import tdas.ArrayList;
 import tdas.CircularLinkedList;
 import tdas.DoubleLinkNode;
 
@@ -42,7 +46,9 @@ public class ContactCardController implements Initializable {
     private VBox fields;
     @FXML
     private Button deleteBtn;
-    
+    @FXML
+    private Button editBtn;
+
     private HBox gallery = new HBox(8);
     private static Contact currentContact;
     private CircularLinkedList<String> photos = currentContact.getPhotos();
@@ -55,10 +61,7 @@ public class ContactCardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cursor = photos.getReference();
-        createFields(currentContact);
-        deleteBtn.setOnAction(ev -> {deleteContact(currentContact);});
-        
+        startup();
     }
 
     public static void setCurrentContact(Contact c) {
@@ -73,7 +76,7 @@ public class ContactCardController implements Initializable {
         banner.getChildren().addAll(pfp, context);
         banner.setAlignment(Pos.CENTER);
         fields.getChildren().addAll(banner, context);
-        contactArbitrator(c);
+        contactCreationArbitrator(c);
         gallery.setOnScroll((ScrollEvent event) -> {
             double deltaX = event.getDeltaX();
             if (deltaX > 0) {
@@ -103,13 +106,23 @@ public class ContactCardController implements Initializable {
         showGallery();
     }
 
-    private void contactArbitrator(Contact c) {
+    private void contactCreationArbitrator(Contact c) {
         if (c instanceof Person) {
             Person person = (Person) c;
             createPersonFields(person);
         } else if (c instanceof Company) {
             Company company = (Company) c;
             createCompanyFields(company);
+        }
+    }
+
+    private void contactEditionArbitrator(Contact c, VBox input, Stage stage) {
+        if (c instanceof Person) {
+            Person person = (Person) c;
+            editPersonFields(person, input, stage);
+        } else if (c instanceof Company) {
+            Company company = (Company) c;
+            editCompanyFields(company, input, stage);
         }
     }
 
@@ -166,7 +179,7 @@ public class ContactCardController implements Initializable {
             fields.getChildren().add(new Label(h.toString() + "\n"));
         }
     }
-    
+
     private void showDates() {
         for (IconicDate i : currentContact.getDates()) {
             fields.getChildren().add(new Label(i.toString() + "\n"));
@@ -188,21 +201,31 @@ public class ContactCardController implements Initializable {
             cursor = cursor.getNext();
         }
     }
-    
+
     @FXML
-    private void deleteContact(Contact c){
-        if(showConfirmationAlert()){
+    private void editContact() {
+        Contact c = currentContact;
+        VBox input = new VBox(10);
+        Scene contactScene = new Scene(input, 450, 700);
+        Stage contactStage = new Stage();
+        contactStage.setScene(contactScene);
+        contactStage.show();
+        contactEditionArbitrator(c, input, contactStage);
+    }
+
+    @FXML
+    private void deleteContact(Contact c) {
+        if (showConfirmationAlert()) {
             ContactsController.getContacts().remove(c);
             Memory.save();
-            try{
+            try {
                 switchToContacts();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
     private boolean showConfirmationAlert() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Eliminación del contacto");
@@ -226,6 +249,101 @@ public class ContactCardController implements Initializable {
             cursor = cursor.getNext();
             showGallery();
         }
+    }
+
+    private void editPersonFields(Person person, VBox input, Stage stage) {
+        TextField firstName = new TextField(person.getFirstName());
+        TextField middleName = new TextField(person.getMiddleName());
+        TextField lastName = new TextField(person.getLastName());
+        TextField context = new TextField(person.getContext());
+        input.getChildren().addAll(firstName, middleName, lastName, context);
+        CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, stage);
+        ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
+        for (PhoneNumber p : person.getPhoneNumbers()) {
+            phoneList.addLast(p);
+        }
+        ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
+        for (Email e : person.getEmails()) {
+            emailList.addLast(e);
+        }
+        ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
+        for (Address a : person.getAddresses()) {
+            addressList.addLast(a);
+        }
+        ArrayList<Handle> handleList = vistasUtilitary.handleWizard(input);
+        for (Handle h : person.getHandles()) {
+            handleList.addLast(h);
+        }
+        ArrayList<IconicDate> iconicDateList = vistasUtilitary.iconicDateWizard(input);
+        for (IconicDate d : person.getDates()) {
+            iconicDateList.addLast(d);
+        }
+        Button save = new Button("Guardar cambios");
+        input.getChildren().add(save);
+        save.setOnAction(ev -> {
+            person.setFirstName(firstName.getText());
+            person.setMiddleName(middleName.getText());
+            person.setLastName(lastName.getText());
+            person.setContext(context.getText());
+            person.setPhoneNumbers(phoneList);
+            person.setEmails(emailList);
+            person.setAddresses(addressList);
+            person.setHandles(handleList);
+            person.setDates(iconicDateList);
+            Memory.save();
+            startup();
+            stage.close();
+        });
+    }
+
+    private void editCompanyFields(Company company, VBox input, Stage stage) {
+        TextField name = new TextField(company.getName());
+        TextField context = new TextField(company.getContext());
+        input.getChildren().addAll(name, context);
+        CircularLinkedList<String> imgPaths = vistasUtilitary.galleryWizard(input, stage);
+        ArrayList<PhoneNumber> phoneList = vistasUtilitary.phoneWizard(input);
+        for (PhoneNumber p : company.getPhoneNumbers()) {
+            phoneList.addLast(p);
+        }
+        ArrayList<Email> emailList = vistasUtilitary.emailWizard(input);
+        for (Email e : company.getEmails()) {
+            emailList.addLast(e);
+        }
+        ArrayList<Address> addressList = vistasUtilitary.addressWizard(input);
+        for (Address a : company.getAddresses()) {
+            addressList.addLast(a);
+        }
+        ArrayList<Handle> handleList = vistasUtilitary.handleWizard(input);
+        for (Handle h : company.getHandles()) {
+            handleList.addLast(h);
+        }
+        ArrayList<IconicDate> iconicDateList = vistasUtilitary.iconicDateWizard(input);
+        for (IconicDate d : company.getDates()) {
+            iconicDateList.addLast(d);
+        }
+        Button save = new Button("Guardar cambios");
+        input.getChildren().add(save);
+        save.setOnAction(ev -> {
+            company.setName(name.getText());
+            company.setContext(context.getText());
+            company.setPhoneNumbers(phoneList);
+            company.setEmails(emailList);
+            company.setAddresses(addressList);
+            company.setHandles(handleList);
+            company.setDates(iconicDateList);
+            Memory.save();
+            startup();
+            stage.close();
+        });
+    }
+
+    private void startup() {
+        fields.getChildren().clear();
+        cursor = photos.getReference();
+        createFields(currentContact);
+        deleteBtn.setOnAction(ev -> {
+            deleteContact(currentContact);
+        });
     }
 
 }

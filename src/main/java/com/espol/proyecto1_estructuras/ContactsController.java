@@ -382,7 +382,6 @@ public class ContactsController implements Initializable {
             cursor = showingContacts.getReference();
         }
         Memory.save();
-        System.out.println(currentUser.getData().getContacts());
         showContacts();
     }
 
@@ -444,7 +443,7 @@ public class ContactsController implements Initializable {
             vistasUtilitary.cropIntoCircle(pfp, 18);
             Button edit = new Button("Editar contacto");
             edit.setOnAction(ev -> editContact(contact));
-            card.getChildren().addAll(pfp, name, edit);
+            card.getChildren().addAll(pfp, name);
             card.setOnMouseClicked(ev -> {
                 ContactCardController.setCurrentContact(contact);
                 try {
