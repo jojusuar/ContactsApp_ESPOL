@@ -49,7 +49,7 @@ public class ContactsController implements Initializable {
     private static CircularLinkedList<Contact> contacts = null;
     private static CircularLinkedList<Contact> showingContacts = null;
     private static DoubleLinkNode<Contact> cursor = null;
-
+    
     @FXML
     private ScrollPane scroller;
 
@@ -77,11 +77,6 @@ public class ContactsController implements Initializable {
     @FXML
     private void switchToLogin() throws IOException {
         App.setRoot("login");
-    }
-
-    @FXML
-    private void switchToSearch() throws IOException {
-        App.setRoot("search");
     }
 
     private void switchToContactCard() throws IOException {
@@ -394,12 +389,24 @@ public class ContactsController implements Initializable {
         ContactsController.currentUser = currentUser;
     }
 
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setShowingContacts(CircularLinkedList<Contact> showingContacts) {
+        ContactsController.showingContacts = showingContacts;
+    }
+
+    public static CircularLinkedList<Contact> getContacts() {
+        return contacts;
+    }
+
     private void showContacts() {
         grid.getChildren().clear();
         int contactsSize = showingContacts.size();
-        if (contactsSize <= 9) {
+        if (contactsSize <= 9 && contactsSize>0) {
             createContactSlots(contactsSize);
-        } else {
+        } else if (contactsSize > 9) {
             createContactSlots(10);
             for (int i = 0; i < contactsSize - 10; i++) {
                 cursor = cursor.getNext();

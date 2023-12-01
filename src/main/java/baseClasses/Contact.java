@@ -173,4 +173,5 @@ public abstract class Contact implements Serializable {
     
     @Override
     public abstract String toString();
+    
 }
