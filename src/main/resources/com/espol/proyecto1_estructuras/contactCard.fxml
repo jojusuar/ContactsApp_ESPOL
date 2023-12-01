@@ -12,7 +12,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#switchToContacts" onMouseClicked="#switchToContacts" text="Volver" />
             <Button mnemonicParsing="false" text="Editar" />
-            <Button mnemonicParsing="false" text="Eliminar" />
+            <Button id="deleteBtn" fx:id="deleteBtn" mnemonicParsing="false" text="Eliminar" />
          </children>
       </HBox>
       <ScrollPane prefHeight="624.0" prefWidth="261.0">

@@ -14,17 +14,22 @@ import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import persistence.Memory;
+import persistence.UserData;
 import tdas.CircularLinkedList;
 import tdas.DoubleLinkNode;
 
@@ -37,6 +42,9 @@ public class ContactCardController implements Initializable {
 
     @FXML
     private VBox fields;
+    @FXML
+    private Button deleteBtn;
+    
     private HBox gallery = new HBox(8);
     private static Contact currentContact;
     private CircularLinkedList<String> photos = currentContact.getPhotos();
@@ -51,6 +59,8 @@ public class ContactCardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         cursor = photos.getReference();
         createFields(currentContact);
+        deleteBtn.setOnAction(ev -> {deleteContact(currentContact);});
+        
     }
 
     public static void setCurrentContact(Contact c) {
@@ -179,6 +189,30 @@ public class ContactCardController implements Initializable {
             gallery.getChildren().add(photo);
             cursor = cursor.getNext();
         }
+    }
+    
+    @FXML
+    private void deleteContact(Contact c){
+        if(showConfirmationAlert()){
+            ContactsController.getContacts().remove(c);
+            Memory.save();
+            try{
+                switchToContacts();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private boolean showConfirmationAlert() {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Eliminación del contacto");
+        confirmationAlert.setHeaderText("Continuar con la eliminación?");
+        confirmationAlert.setContentText("La eliminación es permamente e irreversible.");
+        confirmationAlert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+        java.util.Optional<ButtonType> result = confirmationAlert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private void moveLeft() {

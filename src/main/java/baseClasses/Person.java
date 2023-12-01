@@ -1,6 +1,7 @@
 
 package baseClasses;
 
+import java.util.Objects;
 import tdas.CircularLinkedList;
 
 /**
@@ -48,5 +49,9 @@ public class Person extends Contact {
     @Override
     public String toString(){
         return firstName+" "+middleName.charAt(0)+". "+lastName;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(context,isFavorite,commonGroups,traits,phoneNumbers,addresses,emails,handles,pfp,photos,dates,relatedContacts, firstName, middleName, lastName);
     }
 }

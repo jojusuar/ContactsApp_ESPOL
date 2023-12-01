@@ -6,26 +6,30 @@ package persistence;
 
 import baseClasses.Contact;
 import java.io.Serializable;
-import tdas.ArrayList;
 import tdas.CircularLinkedList;
 
 /**
  *
  * @author euclasio
  */
-public class UserData implements Serializable{
+public class UserData implements Serializable {
+
     private CircularLinkedList<Contact> contacts;
-    
-    public UserData(){
+
+    public UserData() {
         contacts = new CircularLinkedList<>();
     }
-    
-    public void add(Contact c){
+
+    public void add(Contact c) {
         contacts.addLast(c);
-    };
-    public void delete(Contact c){
+    }
+
+    ;
+    public void delete(Contact c) {
         contacts.remove(c);
-    };
+    }
+
+    ;
 
     public CircularLinkedList<Contact> getContacts() {
         return contacts;

@@ -23,10 +23,10 @@
          <children>
             <TextField fx:id="searchBar" layoutX="-6.0" layoutY="19.0" prefHeight="25.0" prefWidth="162.0" />
             <Button fx:id="buscarButton" layoutX="165.0" layoutY="19.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="63.0" text="Buscar" />
-            <ComboBox id="filterCb" fx:id="filterCb" layoutX="233.0" layoutY="19.0" prefHeight="25.0" prefWidth="95.0" promptText="filtro" />
-            <ComboBox fx:id="orderByCb" layoutX="340.0" layoutY="19.0" prefHeight="25.0" prefWidth="95.0" promptText="ordenar" />
+            <ComboBox id="filterCb" fx:id="filterCb" layoutX="233.0" layoutY="19.0" prefHeight="25.0" prefWidth="188.0" promptText="filtro" />
          </children>
       </AnchorPane>
+      <ComboBox fx:id="orderByCb" prefHeight="24.0" prefWidth="220.0" promptText="ordenar por:" />
       <Button id="upButton" fx:id="upButton" mnemonicParsing="false" onAction="#moveUp" text="^" />
       <VBox id="grid" fx:id="grid" prefHeight="486.0" prefWidth="390.0" />
       <Button id="downButton" fx:id="downButton" mnemonicParsing="false" onAction="#moveDown" text="v" />

@@ -30,8 +30,9 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         if (isEmpty()) {
             return 0;
         }
-        DoubleLinkNode current = reference;
+        DoubleLinkNode<E> current = reference;
         int size = 0;
+        System.out.println(reference);
         do {
             current = current.getNext();
             size++;
@@ -223,17 +224,46 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
 
     @Override
     public boolean remove(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (reference == null) {
+            return false;
+        }
+        DoubleLinkNode<E> current = reference;
+
+        do {
+            if (current.getContent().equals(element)) {
+                if (current.getNext() == current) {
+                    reference = null;
+                } else {
+                    current.getPrevious().setNext(current.getNext());
+                    current.getNext().setPrevious(current.getPrevious());
+                    if (current == reference) {
+                        reference = current.getNext();
+                    }
+                }
+                return true;
+            }
+            current = current.getNext();
+        } while (current != reference);
+        return false;
     }
 
     public boolean remove(E element, Comparator<E> comp) {
+        if (reference == null) {
+            return false;
+        }
         DoubleLinkNode<E> current = reference;
+
         do {
-            if (comp.compare(current.getContent(), element) == 0) {
-                current.getPrevious().setNext(current.getNext());
-                current.getNext().setPrevious(current.getPrevious());
-                current.setNext(null);
-                current.setPrevious(null);
+            if (comp.compare(current.getContent(), element)==0) {
+                if (current.getNext() == current) {
+                    reference = null;
+                } else {
+                    current.getPrevious().setNext(current.getNext());
+                    current.getNext().setPrevious(current.getPrevious());
+                    if (current == reference) {
+                        reference = current.getNext();
+                    }
+                }
                 return true;
             }
             current = current.getNext();
@@ -253,60 +283,4 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
     public boolean addAll(List<E> l) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
-    @Override
-    public List<E> findIntersection(List<E> anotherList, Comparator<E> cmp) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean removeDuplicates(Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int binarySearch(E element, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean removeElement(E element, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int getIndexOf(E element, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Collection<Integer> getAllIndicesOf(E element, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean sort(Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean insertSorted(E element, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<E> mergeSorted(List<E> otherList, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<E> findUnion(List<E> otherList, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean containsAll(List<E> elements, Comparator<E> comparator) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }
