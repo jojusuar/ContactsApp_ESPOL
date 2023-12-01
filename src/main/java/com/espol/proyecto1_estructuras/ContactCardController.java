@@ -145,19 +145,19 @@ public class ContactCardController implements Initializable {
 
     private void showPhoneNumbers() {
         for (PhoneNumber p : currentContact.getPhoneNumbers()) {
-            fields.getChildren().add(new Label(p.getContext() + ": \n" + p.toString() + "\n"));
+            fields.getChildren().addAll(new Label(p.getContext() + ": "), new Label(p.toString()));
         }
     }
 
     private void showEmails() {
         for (Email e : currentContact.getEmails()) {
-            fields.getChildren().add(new Label(e.getContext() + ": \n" + e.toString() + "\n"));
+            fields.getChildren().addAll(new Label(e.getContext() + ": "), new Label(e.toString()));
         }
     }
 
     private void showAddresses() {
         for (Address a : currentContact.getAddresses()) {
-            fields.getChildren().add(new Label(a.getContext() + ": \n" + a.toString() + "\n"));
+            fields.getChildren().addAll(new Label(a.getContext() + ": "), new Label(a.toString()));
         }
     }
 
