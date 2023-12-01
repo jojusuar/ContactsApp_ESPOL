@@ -14,7 +14,6 @@ import baseClasses.Person;
 import baseClasses.PhoneNumber;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import persistence.Memory;
-import persistence.UserData;
 import tdas.CircularLinkedList;
 import tdas.DoubleLinkNode;
 

@@ -389,14 +389,6 @@ public class ContactsController implements Initializable {
         ContactsController.currentUser = currentUser;
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setShowingContacts(CircularLinkedList<Contact> showingContacts) {
-        ContactsController.showingContacts = showingContacts;
-    }
-
     public static CircularLinkedList<Contact> getContacts() {
         return contacts;
     }
