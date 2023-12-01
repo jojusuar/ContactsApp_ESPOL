@@ -49,7 +49,7 @@ public class ContactsController implements Initializable {
     private static CircularLinkedList<Contact> contacts = null;
     private static CircularLinkedList<Contact> showingContacts = null;
     private static DoubleLinkNode<Contact> cursor = null;
-    
+
     @FXML
     private ScrollPane scroller;
 
@@ -66,11 +66,11 @@ public class ContactsController implements Initializable {
     private TextField searchBar;
 
     @FXML
-    private ComboBox filterCb;
+    private ComboBox<String> filterCb;
 
     @FXML
     private AnchorPane anchorPane;
-    
+
     @FXML
     private ComboBox<String> orderByCb;
 
@@ -106,13 +106,13 @@ public class ContactsController implements Initializable {
         filterCb.getItems().addAll("por nombre", "por teléfono", "por ciudad");
         filterCb.getSelectionModel().selectFirst();
         orderByCb.getItems().addAll("Nombre y Apellido", "Empresa", "Pais");
-        orderByCb.setOnAction(e ->{
+        orderByCb.setOnAction(e -> {
             String s = orderByCb.getValue();
             showingContacts = contacts;
             cursor = showingContacts.getReference();
             filter(s);
             sort(getComparator(s));
-            
+
         });
     }
 
@@ -132,16 +132,15 @@ public class ContactsController implements Initializable {
                 nameFilter(s, tempContactList);
             } else if (filter.compareTo("por teléfono") == 0) {
                 phoneFilter(s, tempContactList);
-            }
-            else if(filter.compareTo("por ciudad") == 0){
-                cityFilter(s,tempContactList);
+            } else if (filter.compareTo("por ciudad") == 0) {
+                cityFilter(s, tempContactList);
             }
             showingContacts = tempContactList;
             cursor = showingContacts.getReference();
             showContacts();
         }
     }
-    
+
     private void nameFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
             Contact contact = cursor.getContent();
@@ -175,6 +174,7 @@ public class ContactsController implements Initializable {
             cursor = cursor.getNext();
         }
     }
+
     private void cityFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
             Contact contact = cursor.getContent();
@@ -187,49 +187,49 @@ public class ContactsController implements Initializable {
                     }
                 }
             }
-            if(match){
+            if (match) {
                 list.addLast(contact);
             }
             cursor = cursor.getNext();
         }
     }
-    
-    private void sort(Comparator<Contact> comparator){
+
+    private void sort(Comparator<Contact> comparator) {
         CircularLinkedList<Contact> tempContactList = showingContacts;
-        for (int i = 0; i < tempContactList.size(); i++){
-            for (int j = i+1; j < tempContactList.size(); j++){
-                if (comparator.compare(tempContactList.get(i), tempContactList.get(j)) < 0){
-                    //se intercambian ya que el primer elemento debe estar despues del segundo elemento
+        for (int i = 0; i < tempContactList.size(); i++) {
+            for (int j = i + 1; j < tempContactList.size(); j++) {
+                if (comparator.compare(tempContactList.get(i), tempContactList.get(j)) < 0) {
+                    // se intercambian ya que el primer elemento debe estar despues del segundo
+                    // elemento
                     Contact temp1 = tempContactList.get(j);
                     Contact temp2 = tempContactList.get(i);
-                    tempContactList.set(i,temp1);
-                    tempContactList.set(j,temp2);
+                    tempContactList.set(i, temp1);
+                    tempContactList.set(j, temp2);
                 }
-            }   
+            }
         }
         showingContacts = tempContactList;
         cursor = showingContacts.getReference();
         showContacts();
-        
+
     }
-        
-    
-    public Comparator<Contact> getComparator(String option){
+
+    public Comparator<Contact> getComparator(String option) {
         Comparator<Contact> comparator = null;
-        if(option.compareTo("Nombre y Apellido")==0){
+        if (option.compareTo("Nombre y Apellido") == 0) {
             comparator = new Comparator<Contact>() {
                 @Override
                 public int compare(Contact o1, Contact o2) {
                     Person p1 = (Person) o1;
                     Person p2 = (Person) o2;
                     int comparacionNombre = p2.getFirstName().compareTo(p1.getFirstName());
-                    if(comparacionNombre == 0){
+                    if (comparacionNombre == 0) {
                         return p2.getLastName().compareTo(p1.getLastName());
                     }
                     return comparacionNombre;
                 }
-             }; 
-        }else if(option.compareTo("Empresa")==0){
+            };
+        } else if (option.compareTo("Empresa") == 0) {
             comparator = new Comparator<Contact>() {
                 @Override
                 public int compare(Contact o1, Contact o2) {
@@ -237,61 +237,62 @@ public class ContactsController implements Initializable {
                     Company c2 = (Company) o2;
                     return c2.getName().compareTo(c1.getName());
                 }
-             };
-        }else if(option.compareTo("Pais")==0){
+            };
+        } else if (option.compareTo("Pais") == 0) {
             comparator = new Comparator<Contact>() {
                 @Override
                 public int compare(Contact o1, Contact o2) {
-                    return o2.getAddresses().getFirst().getCountry().compareTo(o1.getAddresses().getFirst().getCountry());
+                    return o2.getAddresses().getFirst().getCountry()
+                            .compareTo(o1.getAddresses().getFirst().getCountry());
                 }
-             };
+            };
         }
         return comparator;
     }
-    
-    public void filter(String option){
+
+    public void filter(String option) {
         CircularLinkedList<Contact> tempContactList = new CircularLinkedList<>();
         System.out.println(option);
         System.out.println("------------------------------------");
-        if(option.compareTo("Nombre y Apellido")==0){
-                for (int i = 0; i < showingContacts.size(); i++) {
-                    Contact contact = cursor.getContent();
-                    if(contact instanceof Person){
-                        Person p = (Person) contact;
-                        if(p.getFirstName() != null && p.getLastName() != null){
-                            tempContactList.addLast(contact);
-                            System.out.println("nombre y apellido");
-                        }
-                    } 
-                    cursor = cursor.getNext();
-                }
-        }else if(option.compareTo("Empresa")==0){
-                for (int i = 0; i < showingContacts.size(); i++) {
-                    Contact contact = cursor.getContent();
-                    if(contact instanceof Company){
-                        Company c = (Company) contact;
-                        if(c.getName() != null){
-                            tempContactList.addLast(contact);
-                            System.out.println("Empresa");
-                        }
-                    } 
-                    cursor = cursor.getNext();
-                }
-        }else if(option.compareTo("Pais")==0){
-                for (int i = 0; i < showingContacts.size(); i++) {
-                    Contact contact = cursor.getContent();
-                    if(!contact.getAddresses().isEmpty()){
+        if (option.compareTo("Nombre y Apellido") == 0) {
+            for (int i = 0; i < showingContacts.size(); i++) {
+                Contact contact = cursor.getContent();
+                if (contact instanceof Person) {
+                    Person p = (Person) contact;
+                    if (p.getFirstName() != null && p.getLastName() != null) {
                         tempContactList.addLast(contact);
-                        System.out.println("Pais");
-                    } 
-                    cursor = cursor.getNext();
+                        System.out.println("nombre y apellido");
+                    }
                 }
+                cursor = cursor.getNext();
+            }
+        } else if (option.compareTo("Empresa") == 0) {
+            for (int i = 0; i < showingContacts.size(); i++) {
+                Contact contact = cursor.getContent();
+                if (contact instanceof Company) {
+                    Company c = (Company) contact;
+                    if (c.getName() != null) {
+                        tempContactList.addLast(contact);
+                        System.out.println("Empresa");
+                    }
+                }
+                cursor = cursor.getNext();
+            }
+        } else if (option.compareTo("Pais") == 0) {
+            for (int i = 0; i < showingContacts.size(); i++) {
+                Contact contact = cursor.getContent();
+                if (!contact.getAddresses().isEmpty()) {
+                    tempContactList.addLast(contact);
+                    System.out.println("Pais");
+                }
+                cursor = cursor.getNext();
+            }
         }
         System.out.println(tempContactList);
         showingContacts = tempContactList;
         cursor = showingContacts.getReference();
     }
-    
+
     @FXML
     private void newContact() {
         VBox fields = new VBox(10);
@@ -396,7 +397,7 @@ public class ContactsController implements Initializable {
     private void showContacts() {
         grid.getChildren().clear();
         int contactsSize = showingContacts.size();
-        if (contactsSize <= 9 && contactsSize>0) {
+        if (contactsSize <= 9 && contactsSize > 0) {
             createContactSlots(contactsSize);
         } else if (contactsSize > 9) {
             createContactSlots(10);
@@ -406,6 +407,34 @@ public class ContactsController implements Initializable {
         }
     }
 
+    private void editContact(Contact contact) {
+        // edit context and name
+
+        VBox inputs = new VBox(10);
+        Scene contactScene = new Scene(inputs, 450, 450);
+        Stage contactStage = new Stage();
+        contactStage.setScene(contactScene);
+        contactStage.show();
+
+        TextField context = new TextField(contact.getContext());
+        Label name = new Label("Contactos asociados");
+        Button save = new Button("Guardar cambios");
+        VBox contactosAsociados = new VBox();
+        for (Contact relContact : contact.getRelatedContacts()) {
+            HBox relCard = new HBox(20);
+            Label relName = new Label(relContact.toString());
+            ImageView pfp = vistasUtilitary.loadImage(relContact.getPfp());
+            relCard.getChildren().addAll(relName, pfp);
+            contactosAsociados.getChildren().add(relCard);
+        }
+        inputs.getChildren().addAll(context, name, contactosAsociados, save);
+
+        save.setOnAction(ev -> {
+            contact.setContext(context.getText());
+            contactStage.close();
+        });
+    }
+
     private void createContactSlots(int k) {
         for (int i = 0; i < k; i++) {
             Contact contact = cursor.getContent();
@@ -413,7 +442,9 @@ public class ContactsController implements Initializable {
             Label name = new Label(contact.toString());
             ImageView pfp = vistasUtilitary.loadImage(contact.getPfp());
             vistasUtilitary.cropIntoCircle(pfp, 18);
-            card.getChildren().addAll(pfp, name);
+            Button edit = new Button("Editar contacto");
+            edit.setOnAction(ev -> editContact(contact));
+            card.getChildren().addAll(pfp, name, edit);
             card.setOnMouseClicked(ev -> {
                 ContactCardController.setCurrentContact(contact);
                 try {
