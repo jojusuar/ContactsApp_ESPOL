@@ -11,7 +11,7 @@
       <HBox alignment="CENTER" prefHeight="97.0" prefWidth="261.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" onAction="#switchToContacts" onMouseClicked="#switchToContacts" text="Volver" />
-            <Button mnemonicParsing="false" text="Editar" />
+            <Button mnemonicParsing="false" onAction="#editContact" text="Editar" />
             <Button id="deleteBtn" fx:id="deleteBtn" mnemonicParsing="false" text="Eliminar" />
          </children>
       </HBox>
