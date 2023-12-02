@@ -52,7 +52,6 @@ public class ContactCardController implements Initializable {
     private HBox gallery = new HBox(8);
     private static Contact currentContact;
     private CircularLinkedList<String> photos = currentContact.getPhotos();
-    private DoubleLinkNode<String> cursor = null;
 
     @FXML
     private void switchToContacts() throws IOException {
@@ -151,7 +150,7 @@ public class ContactCardController implements Initializable {
         } else {
             createPhotoSlots(3);
             for (int i = 0; i < gallerySize - 3; i++) {
-                cursor = cursor.getNext();
+                photos.rotateDown();
             }
         }
     }
@@ -188,7 +187,7 @@ public class ContactCardController implements Initializable {
 
     private void createPhotoSlots(int k) {
         for (int i = 0; i < k; i++) {
-            String imagePath = cursor.getContent();
+            String imagePath = photos.get(0);
             ImageView photo = vistasUtilitary.loadImage(imagePath);
             int width = 64;
             if (i == 1) {
@@ -198,7 +197,7 @@ public class ContactCardController implements Initializable {
             photo.setFitWidth(width);
             photo.setSmooth(true);
             gallery.getChildren().add(photo);
-            cursor = cursor.getNext();
+            photos.rotateDown();
         }
     }
 
@@ -237,16 +236,16 @@ public class ContactCardController implements Initializable {
     }
 
     private void moveLeft() {
-        if (cursor != null) {
-            cursor = cursor.getPrevious();
+        if (!photos.isEmpty()) {
+            photos.rotateUp();
             showGallery();
         }
 
     }
 
     private void moveRight() {
-        if (cursor != null) {
-            cursor = cursor.getNext();
+        if (!photos.isEmpty()) {
+            photos.rotateDown();
             showGallery();
         }
     }
@@ -339,7 +338,6 @@ public class ContactCardController implements Initializable {
 
     private void startup() {
         fields.getChildren().clear();
-        cursor = photos.getReference();
         createFields(currentContact);
         deleteBtn.setOnAction(ev -> {
             deleteContact(currentContact);

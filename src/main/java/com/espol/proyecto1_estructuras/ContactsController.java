@@ -36,7 +36,6 @@ import persistence.Memory;
 import persistence.User;
 import tdas.ArrayList;
 import tdas.CircularLinkedList;
-import tdas.DoubleLinkNode;
 
 /**
  * FXML Controller class
@@ -48,7 +47,6 @@ public class ContactsController implements Initializable {
     private static User currentUser = null;
     private static CircularLinkedList<Contact> contacts = null;
     private static CircularLinkedList<Contact> showingContacts = null;
-    private static DoubleLinkNode<Contact> cursor = null;
 
     @FXML
     private ScrollPane scroller;
@@ -93,7 +91,6 @@ public class ContactsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         contacts = currentUser.getData().getContacts();
         showingContacts = currentUser.getData().getContacts();
-        cursor = showingContacts.getReference();
         showContacts();
         grid.setOnScroll((ScrollEvent event) -> {
             double deltaY = event.getDeltaY();
@@ -109,7 +106,6 @@ public class ContactsController implements Initializable {
         orderByCb.setOnAction(e -> {
             String s = orderByCb.getValue();
             showingContacts = contacts;
-            cursor = showingContacts.getReference();
             filter(s);
             sort(getComparator(s));
 
@@ -120,11 +116,11 @@ public class ContactsController implements Initializable {
     private void search() {
         CircularLinkedList<Contact> tempContactList = new CircularLinkedList<>();
         showingContacts = contacts;
-        cursor = showingContacts.getReference();
+
         String s = searchBar.getText().toLowerCase();
         if (s.isBlank() || s.isEmpty()) {
             showingContacts = contacts;
-            cursor = showingContacts.getReference();
+
             showContacts();
         } else {
             String filter = (String) filterCb.getValue();
@@ -136,14 +132,13 @@ public class ContactsController implements Initializable {
                 cityFilter(s, tempContactList);
             }
             showingContacts = tempContactList;
-            cursor = showingContacts.getReference();
             showContacts();
         }
     }
 
     private void nameFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
-            Contact contact = cursor.getContent();
+            Contact contact = showingContacts.get(0);
             String fullname = "";
             if (contact instanceof Person) {
                 Person p = (Person) contact;
@@ -156,13 +151,13 @@ public class ContactsController implements Initializable {
             if (fullname.toLowerCase().contains(query.toLowerCase())) {
                 list.addLast(contact);
             }
-            cursor = cursor.getNext();
+            showingContacts.rotateDown();
         }
     }
 
     private void phoneFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
-            Contact contact = cursor.getContent();
+            Contact contact = showingContacts.get(0);
             ArrayList<PhoneNumber> phonelist = contact.getPhoneNumbers();
             if (!phonelist.isEmpty()) {
                 for (PhoneNumber phone : phonelist) {
@@ -171,13 +166,13 @@ public class ContactsController implements Initializable {
                     }
                 }
             }
-            cursor = cursor.getNext();
+            showingContacts.rotateDown();
         }
     }
 
     private void cityFilter(String query, CircularLinkedList<Contact> list) {
         for (int i = 0; i < showingContacts.size(); i++) {
-            Contact contact = cursor.getContent();
+            Contact contact = showingContacts.get(0);
             ArrayList<Address> addressList = contact.getAddresses();
             boolean match = false;
             if (!addressList.isEmpty()) {
@@ -190,7 +185,7 @@ public class ContactsController implements Initializable {
             if (match) {
                 list.addLast(contact);
             }
-            cursor = cursor.getNext();
+            showingContacts.rotateDown();
         }
     }
 
@@ -209,7 +204,6 @@ public class ContactsController implements Initializable {
             }
         }
         showingContacts = tempContactList;
-        cursor = showingContacts.getReference();
         showContacts();
 
     }
@@ -217,35 +211,24 @@ public class ContactsController implements Initializable {
     public Comparator<Contact> getComparator(String option) {
         Comparator<Contact> comparator = null;
         if (option.compareTo("Nombre y Apellido") == 0) {
-            comparator = new Comparator<Contact>() {
-                @Override
-                public int compare(Contact o1, Contact o2) {
-                    Person p1 = (Person) o1;
-                    Person p2 = (Person) o2;
-                    int comparacionNombre = p2.getFirstName().compareTo(p1.getFirstName());
-                    if (comparacionNombre == 0) {
-                        return p2.getLastName().compareTo(p1.getLastName());
-                    }
-                    return comparacionNombre;
+            comparator = (Contact o1, Contact o2) -> {
+                Person p1 = (Person) o1;
+                Person p2 = (Person) o2;
+                int comparacionNombre = p2.getFirstName().compareTo(p1.getFirstName());
+                if (comparacionNombre == 0) {
+                    return p2.getLastName().compareTo(p1.getLastName());
                 }
+                return comparacionNombre;
             };
         } else if (option.compareTo("Empresa") == 0) {
-            comparator = new Comparator<Contact>() {
-                @Override
-                public int compare(Contact o1, Contact o2) {
-                    Company c1 = (Company) o1;
-                    Company c2 = (Company) o2;
-                    return c2.getName().compareTo(c1.getName());
-                }
+            comparator = (Contact o1, Contact o2) -> {
+                Company c1 = (Company) o1;
+                Company c2 = (Company) o2;
+                return c2.getName().compareTo(c1.getName());
             };
         } else if (option.compareTo("Pais") == 0) {
-            comparator = new Comparator<Contact>() {
-                @Override
-                public int compare(Contact o1, Contact o2) {
-                    return o2.getAddresses().getFirst().getCountry()
-                            .compareTo(o1.getAddresses().getFirst().getCountry());
-                }
-            };
+            comparator = (Contact o1, Contact o2) -> o2.getAddresses().getFirst().getCountry()
+                    .compareTo(o1.getAddresses().getFirst().getCountry());
         }
         return comparator;
     }
@@ -256,7 +239,7 @@ public class ContactsController implements Initializable {
         System.out.println("------------------------------------");
         if (option.compareTo("Nombre y Apellido") == 0) {
             for (int i = 0; i < showingContacts.size(); i++) {
-                Contact contact = cursor.getContent();
+                Contact contact = showingContacts.get(0);
                 if (contact instanceof Person) {
                     Person p = (Person) contact;
                     if (p.getFirstName() != null && p.getLastName() != null) {
@@ -264,11 +247,11 @@ public class ContactsController implements Initializable {
                         System.out.println("nombre y apellido");
                     }
                 }
-                cursor = cursor.getNext();
+                showingContacts.rotateDown();
             }
         } else if (option.compareTo("Empresa") == 0) {
             for (int i = 0; i < showingContacts.size(); i++) {
-                Contact contact = cursor.getContent();
+                Contact contact = showingContacts.get(0);
                 if (contact instanceof Company) {
                     Company c = (Company) contact;
                     if (c.getName() != null) {
@@ -276,21 +259,20 @@ public class ContactsController implements Initializable {
                         System.out.println("Empresa");
                     }
                 }
-                cursor = cursor.getNext();
+                showingContacts.rotateDown();
             }
         } else if (option.compareTo("Pais") == 0) {
             for (int i = 0; i < showingContacts.size(); i++) {
-                Contact contact = cursor.getContent();
+                Contact contact = showingContacts.get(0);
                 if (!contact.getAddresses().isEmpty()) {
                     tempContactList.addLast(contact);
                     System.out.println("Pais");
                 }
-                cursor = cursor.getNext();
+                showingContacts.rotateDown();
             }
         }
         System.out.println(tempContactList);
         showingContacts = tempContactList;
-        cursor = showingContacts.getReference();
     }
 
     @FXML
@@ -373,14 +355,7 @@ public class ContactsController implements Initializable {
     }
 
     private void saveContact(Contact c) {
-        boolean empty = false;
-        if (showingContacts.isEmpty()) {
-            empty = true;
-        }
         currentUser.getData().add(c);
-        if (empty) {
-            cursor = showingContacts.getReference();
-        }
         Memory.save();
         showContacts();
     }
@@ -401,7 +376,7 @@ public class ContactsController implements Initializable {
         } else if (contactsSize > 9) {
             createContactSlots(10);
             for (int i = 0; i < contactsSize - 10; i++) {
-                cursor = cursor.getNext();
+                showingContacts.rotateDown();
             }
         }
     }
@@ -436,7 +411,7 @@ public class ContactsController implements Initializable {
 
     private void createContactSlots(int k) {
         for (int i = 0; i < k; i++) {
-            Contact contact = cursor.getContent();
+            Contact contact = showingContacts.get(0);
             HBox card = new HBox(20);
             Label name = new Label(contact.toString());
             ImageView pfp = vistasUtilitary.loadImage(contact.getPfp());
@@ -453,24 +428,19 @@ public class ContactsController implements Initializable {
                 }
             });
             grid.getChildren().add(card);
-            cursor = cursor.getNext();
+            showingContacts.rotateDown();
         }
     }
 
     @FXML
     private void moveUp() {
-        if (cursor != null) {
-            cursor = cursor.getPrevious();
-            showContacts();
-        }
-
+        showingContacts.rotateUp();
+        showContacts();
     }
 
     @FXML
     private void moveDown() {
-        if (cursor != null) {
-            cursor = cursor.getNext();
-            showContacts();
-        }
+        showingContacts.rotateDown();
+        showContacts();
     }
 }
