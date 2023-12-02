@@ -289,4 +289,16 @@ public class CircularLinkedList<E> implements List<E>, Serializable {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    public void rotateUp(){
+        if (reference != null) {
+            reference = reference.getPrevious();
+        }
+    }
+    
+    public void rotateDown(){
+        if (reference != null) {
+            reference = reference.getNext();
+        }
+    }
 }
